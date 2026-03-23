@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import { theme, alpha } from "../styles/theme/theme"
 import { tableStyles } from "../styles/mixins/table"
 import { useState, useMemo, useCallback } from "react"
+import { useViewParams } from "../hooks/useViewParams"
 import { Button } from "../components/ui/button"
 import { Checkbox } from "../components/ui/checkbox"
 import { Input } from "../components/ui/input"
@@ -25,7 +26,7 @@ import {
   getShipmentPlanData,
   LOCATION_OPTIONS,
 } from "../data/shipments-validation-data"
-import { ExpandableDataTable, type ColumnDef } from "../components/ExpandableDataTable"
+import { DataTable, type ColumnDef } from "../components/DataTable"
 import { ContextTable, type ContextTableRow } from "../components/ContextTable"
 
 // ─── constants ────────────────────────────────────────────────────────────────
@@ -150,6 +151,13 @@ const s = {
 
 // ─── component ────────────────────────────────────────────────────────────────
 
+const defaultViewParams = {
+  filterStatus: ["Needs Review"] as string[],
+  filterSku: [] as string[],
+  filterLocation: [] as string[],
+  filterPlanner: [] as string[],
+}
+
 export function ShipmentsValidationView() {
   const [adjustments, setAdjustments] = useState<ShipmentAdjustment[]>(generateSampleAdjustments())
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -159,24 +167,19 @@ export function ShipmentsValidationView() {
     overrideValue: "",
     overrideReason: "",
   })
-  const [filterValues, setFilterValues] = useState<Record<string, string[]>>({
-    status: ["Needs Review"],
-    sku: [],
-    location: [],
-    planner: [],
-  })
+  const { params, setParam } = useViewParams(defaultViewParams)
 
   const approvedCount = useMemo(() => adjustments.filter((a) => a.status === "approved").length, [adjustments])
 
   const filteredAdjustments = useMemo(() => {
     return adjustments.filter((adj) => {
-      if (filterValues.status.length > 0 && !filterValues.status.includes(STATUS_DISPLAY[adj.status])) return false
-      if (filterValues.sku.length > 0 && !filterValues.sku.includes(adj.sku)) return false
-      if (filterValues.location.length > 0 && !filterValues.location.includes(adj.shipTo)) return false
-      if (filterValues.planner.length > 0 && !filterValues.planner.includes(adj.planner)) return false
+      if (params.filterStatus.length > 0 && !params.filterStatus.includes(STATUS_DISPLAY[adj.status])) return false
+      if (params.filterSku.length > 0 && !params.filterSku.includes(adj.sku)) return false
+      if (params.filterLocation.length > 0 && !params.filterLocation.includes(adj.shipTo)) return false
+      if (params.filterPlanner.length > 0 && !params.filterPlanner.includes(adj.planner)) return false
       return true
     })
-  }, [adjustments, filterValues])
+  }, [adjustments, params.filterStatus, params.filterSku, params.filterLocation, params.filterPlanner])
 
   const toggleSelected = (id: string) => {
     const next = new Set(selectedIds)
@@ -253,9 +256,6 @@ export function ShipmentsValidationView() {
   }), [uniqueLocations])
   const plannerOpts = useMemo(() => uniquePlanners.map((v) => ({ value: v, label: v })), [uniquePlanners])
 
-  const handleFilterChange = useCallback((key: string, values: string[]) => {
-    setFilterValues((prev) => ({ ...prev, [key]: values }))
-  }, [])
 
   // ─── Column definitions ────────────────────────────────────────────────────
 
@@ -536,15 +536,15 @@ export function ShipmentsValidationView() {
 
       {/* Filters */}
       <ViewControls>
-        <ViewControls.FilterDropdown label="Status" values={filterValues.status} onChange={(v) => handleFilterChange("status", v)} options={statusOpts} multiple={false} />
-        <ViewControls.FilterDropdown label="SKU" values={filterValues.sku} onChange={(v) => handleFilterChange("sku", v)} options={skuOpts} />
-        <ViewControls.FilterDropdown label="Location" values={filterValues.location} onChange={(v) => handleFilterChange("location", v)} options={locationOpts} />
-        <ViewControls.FilterDropdown label="Planner" values={filterValues.planner} onChange={(v) => handleFilterChange("planner", v)} options={plannerOpts} />
+        <ViewControls.FilterDropdown label="Status" values={params.filterStatus} onChange={(v) => setParam("filterStatus", v)} options={statusOpts} multiple={false} />
+        <ViewControls.FilterDropdown label="SKU" values={params.filterSku} onChange={(v) => setParam("filterSku", v)} options={skuOpts} />
+        <ViewControls.FilterDropdown label="Location" values={params.filterLocation} onChange={(v) => setParam("filterLocation", v)} options={locationOpts} />
+        <ViewControls.FilterDropdown label="Planner" values={params.filterPlanner} onChange={(v) => setParam("filterPlanner", v)} options={plannerOpts} />
       </ViewControls>
 
       {/* Table */}
       <div css={tableStyles.wrap}>
-        <ExpandableDataTable<ShipmentAdjustment>
+        <DataTable<ShipmentAdjustment>
           data={filteredAdjustments}
           columns={columns}
           getRowId={(adj) => adj.id}

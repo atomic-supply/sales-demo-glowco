@@ -51,12 +51,12 @@ const sidebarItems: SidebarItem[] = [
   { type: "header", name: "Demand" },
   {
     type: "expandable",
-    prefix: "/retailers",
+    prefix: "/demand",
     name: terminology.modules.retailers,
     icon: Store as Icon,
     children: [
-      { href: "/retailers", name: terminology.plans.consumption, icon: Footprints as Icon },
-      { href: "/retailers/validation", name: "Validation", icon: CheckCircle as Icon },
+      { href: "/demand/forecast", name: terminology.plans.consumption, icon: Footprints as Icon },
+      { href: "/demand/validation", name: "Validation", icon: CheckCircle as Icon },
     ],
   },
   {
@@ -65,8 +65,8 @@ const sidebarItems: SidebarItem[] = [
     name: terminology.modules.shipments,
     icon: Truck as Icon,
     children: [
-      { href: "/shipments", name: terminology.plans.shipments, icon: Footprints as Icon },
-      { href: "/shipments/forecast", name: "Shipments", icon: BarChart3 as Icon },
+      { href: "/shipments/walk", name: "Walk", icon: Footprints as Icon },
+      { href: "/shipments/forecast", name: "Forecast", icon: BarChart3 as Icon },
       { href: "/shipments/validation", name: "Validation", icon: CheckCircle as Icon },
       { href: "/shipments/configuration", name: "Configuration", icon: Settings as Icon },
     ],

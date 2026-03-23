@@ -31,8 +31,5 @@ export const CUSTOMER_NAMES = [
   "Shopify B2B",
 ]
 
-export const DEFAULT_FROM_DATE = "12/01/2025"
-export const DEFAULT_TO_DATE = "03/31/2026"
-
 export const PROTEIN_TYPES = ["Oat Protein", "Pea Protein", "Almond Protein"]
 export const SIZE_TYPES = ["Full Size", "Mini"]

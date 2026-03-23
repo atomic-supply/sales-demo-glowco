@@ -1,6 +1,24 @@
 export type DateLike = number | string | Date | null | undefined;
 
 /**
+ * First day of a given year as "MM/DD/YYYY".
+ * Defaults to the current calendar year.
+ */
+export function currentYearStart(year?: number): string {
+  const y = year ?? new Date().getFullYear()
+  return `01/01/${y}`
+}
+
+/**
+ * Last day of a given year as "MM/DD/YYYY".
+ * Defaults to the current calendar year.
+ */
+export function currentYearEnd(year?: number): string {
+  const y = year ?? new Date().getFullYear()
+  return `12/31/${y}`
+}
+
+/**
  * Generate month column labels between two MM/DD/YY date strings.
  * Returns labels like "01/01/26", "02/01/26", etc.
  */
@@ -85,6 +103,40 @@ export const formatUtcDate = (
     timeZone: "UTC",
   }).format(date);
 };
+
+/** Parse a short date string (MM/DD/YY or MM/DD/YYYY) to a Date object. */
+export function parseShortDate(s: string): Date {
+  const [m, d, y] = s.split("/").map(Number)
+  return new Date(y < 100 ? 2000 + y : y, m - 1, d)
+}
+
+/** Convert an ISO date string ("YYYY-MM-DD") to a period bucket label ("MM/DD/YY"). */
+export function dateToPeriod(dateStr: string, displayBy: string): string {
+  const d = new Date(dateStr + "T00:00:00")
+  const mm = String(d.getMonth() + 1).padStart(2, "0")
+  const yy = String(d.getFullYear()).slice(2)
+  if (displayBy === "Month") {
+    return `${mm}/01/${yy}`
+  }
+  // Week — truncate to Monday
+  const day = d.getDay()
+  const diff = day === 0 ? -6 : 1 - day
+  const monday = new Date(d)
+  monday.setDate(d.getDate() + diff)
+  const wMm = String(monday.getMonth() + 1).padStart(2, "0")
+  const wDd = String(monday.getDate()).padStart(2, "0")
+  const wYy = String(monday.getFullYear()).slice(2)
+  return `${wMm}/${wDd}/${wYy}`
+}
+
+/** Sort period strings ("MM/DD/YY") in chronological order. */
+export function sortPeriods(periods: string[]): string[] {
+  return [...periods].sort((a, b) => {
+    const da = parseShortDate(a)
+    const db = parseShortDate(b)
+    return da.getTime() - db.getTime()
+  })
+}
 
 /**
  * Convert a date value to ISO format (YYYY-MM-DD) in UTC for Python backend compatibility.

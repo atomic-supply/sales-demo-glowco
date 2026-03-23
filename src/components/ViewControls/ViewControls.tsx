@@ -184,11 +184,12 @@ const AggregateBy: FC<AggregateByProps> = ({
   onChange,
   options,
   disabled = false,
+  label = "Aggregate by",
 }) => {
   const selected = options.find((o) => o.value === value)
   return (
     <div css={viewControlsBar.widget}>
-      <div css={viewControlsBar.label}>Aggregate by</div>
+      <div css={viewControlsBar.label}>{label}</div>
       <div css={viewControlsBar.underline}>
         <Select value={value} onValueChange={onChange} disabled={disabled}>
           <SelectTrigger css={bareSelectTrigger}>

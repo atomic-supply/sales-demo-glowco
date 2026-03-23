@@ -4,9 +4,11 @@ import { retailerSkuMapping } from "./runs/unified-data"
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface DemandRow {
-  channel: string
+  retailer: string
   sku: string
   skuName: string
+  /** String fields available for segmenting. Keys must match segment option values. */
+  [key: string]: string
 }
 
 export type CategoryType = "History" | "Baseline Forecast" | "Planner Override" | "Final Forecast" | "YoY%"
@@ -29,17 +31,12 @@ export interface RetailDemandData {
   }
 }
 
-// ─── Default date range ───────────────────────────────────────────────────────
-
-export const DEFAULT_FROM_DATE = "12/01/2025"
-export const DEFAULT_TO_DATE = "03/31/2026"
-
 // ─── Deterministic data generation ───────────────────────────────────────────
 
-export function generateDemandWalkData(sku: string, channel: string, monthColumns: string[]): MeasureRow[] {
+export function generateDemandWalkData(sku: string, retailer: string, monthColumns: string[]): MeasureRow[] {
   const rand = seededRand(
     sku.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 137 +
-    channel.split("").reduce((a, c) => a + c.charCodeAt(0), 0),
+    retailer.split("").reduce((a, c) => a + c.charCodeAt(0), 0),
   )
   const colMonths = monthColumns.map((col) => {
     const [m, , y] = col.split("/").map(Number)
@@ -104,9 +101,8 @@ export function getChannel(retailer: string): string {
 export function buildDemandRows(): DemandRow[] {
   const rows: DemandRow[] = []
   for (const [retailer, skus] of Object.entries(retailerSkuMapping)) {
-    const channel = getChannel(retailer)
     for (const { sku, name } of skus) {
-      rows.push({ channel, sku, skuName: name })
+      rows.push({ retailer, sku, skuName: name })
     }
   }
   return rows

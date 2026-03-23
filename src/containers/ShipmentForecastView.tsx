@@ -1,510 +1,331 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-import { useState, useMemo, useCallback } from "react"
+import { useMemo, useCallback } from "react"
 import { theme } from "../styles/theme/theme"
-import { tableStyles } from "../styles/mixins/table"
-import { ChevronDown, ChevronRight } from "lucide-react"
-import { TableHead, TableCell } from "../components/ui/table"
-import { ViewControls } from "../components/ViewControls"
+import { tableStyles } from "../styles"
+import { Download } from "lucide-react"
+import { TableCell } from "../components/ui/table"
+import { ViewControls, type FilterEntry } from "../components/ViewControls"
 import { PageHeader } from "../layouts/DashboardLayout/PageHeader"
-import { DataTable } from "../components/DataTable"
-import { seededRand } from "../utils/random"
-import { skus, shipToLocations } from "../data/runs/unified-data"
-import {
-  DEFAULT_FROM_DATE,
-  DEFAULT_TO_DATE,
-} from "../data/shipment-forecast-data"
-import { generateMonthColumns, generateWeekColumns } from "../utils/date"
+import { Button } from "../components/ui/button"
+import { DataTable, type ColumnDef } from "../components/DataTable"
+import { currentYearStart, currentYearEnd, parseShortDate, sortPeriods } from "../utils/date"
+import { formatNumberOrNull } from "../utils/format"
+import { useViewParams } from "../hooks/useViewParams"
+import rawData from "../data/ui_shipment_forecast.json"
 
-// =============================================================================
-// Types
-// =============================================================================
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-type CategoryType = "History" | "Baseline Forecast" | "Planner Override" | "Final Forecast" | "YoY%"
+interface RawRecord {
+  sku: string
+  retailer: string
+  status: string
+  period: string      // "MM/01/YY"
+  quantity: number
+  [key: string]: string | number
+}
 
-interface MeasureRow {
-  category: CategoryType
-  year: string
+interface FlatRow {
+  id: string
+  segmentLabel: string
   values: (number | null)[]
+  total: number
+  isTotal: boolean
 }
 
-type FlatRow =
-  | { kind: "primary"; primary: string; aggregates: number[]; hasChildren: boolean; isExpanded: boolean }
-  | { kind: "measure"; primary: string; secondary: string; measure: MeasureRow; measureIdx: number; isFirstMeasure: boolean; hasSecondary: boolean }
+// ─── Segment configuration ──────────────────────────────────────────────────
 
-// =============================================================================
-// Data generation
-// =============================================================================
+const SEGMENT_COLS = ["retailer", "sku"] as const
 
-function generateForecastMeasures(shipTo: string, sku: string, monthColumns: string[]): MeasureRow[] {
-  const rand = seededRand(
-    shipTo.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 137 +
-    sku.split("").reduce((a, c) => a + c.charCodeAt(0), 0),
-  )
-
-  const colMonths = monthColumns.map((col) => {
-    const parts = col.split("/").map(Number)
-    const m = parts[0]
-    const y = parts[2] !== undefined ? (parts[2] < 100 ? parts[2] + 2000 : parts[2]) : parts[1]
-    return { month: m, year: y }
-  })
-
-  const skuHash = sku.split("").reduce((a, c) => a + c.charCodeAt(0), 0)
-  const baseDemand = 200 + (skuHash % 800)
-  const seasonality = [0.85, 0.90, 1.05, 1.15, 1.25, 1.30, 1.20, 1.10, 1.00, 0.95, 1.10, 1.35]
-
-  const years = ["2022-23", "2023-24", "2024-25"]
-  const growthRates = [1.0, 1.25, 1.40]
-
-  const historyRows: MeasureRow[] = years.map((yr, yi) => {
-    const growth = growthRates[yi]
-    const values = colMonths.map(({ month }, i) => {
-      const base = baseDemand * growth * seasonality[month - 1]
-      const noise = 0.85 + rand() * 0.3
-      const val = Math.round(base * noise)
-      if (yi === 0 && i < 3) return null
-      return val
-    })
-    return { category: "History" as CategoryType, year: yr, values }
-  })
-
-  const baselineGrowth = 1.32 + rand() * 0.08
-  const baselineRow: MeasureRow = {
-    category: "Baseline Forecast",
-    year: "2025-26",
-    values: colMonths.map(({ month }) => {
-      const base = baseDemand * growthRates[2] * baselineGrowth * seasonality[month - 1]
-      const noise = 0.95 + rand() * 0.1
-      return Math.round(base * noise)
-    }),
-  }
-
-  const overrideRow: MeasureRow = {
-    category: "Planner Override",
-    year: "",
-    values: colMonths.map(() => null),
-  }
-
-  const finalRow: MeasureRow = {
-    category: "Final Forecast",
-    year: "",
-    values: baselineRow.values.map((v, i) => {
-      const ov = overrideRow.values[i]
-      return ov !== null ? ov : v
-    }),
-  }
-
-  const lastHistory = historyRows[historyRows.length - 1]
-  const yoyRow: MeasureRow = {
-    category: "YoY%",
-    year: "",
-    values: finalRow.values.map((f, i) => {
-      const h = lastHistory.values[i]
-      if (f === null || h === null || h === 0) return null
-      return Math.round(((f / h) - 1) * 100)
-    }),
-  }
-
-  return [...historyRows, baselineRow, overrideRow, finalRow, yoyRow]
+const SEGMENT_LABEL: Record<string, string> = {
+  retailer: "Retailer",
+  sku: "SKU",
 }
-
-// =============================================================================
-// Segment options and helpers
-// =============================================================================
-
-const SEGMENT_OPTIONS = [
-  { value: "First Receiver", label: "First Receiver" },
-  { value: "DC Name", label: "DC Name" },
-  { value: "Customer Name", label: "Customer Name" },
-  { value: "SKU", label: "SKU" },
-  { value: "Protein", label: "Protein" },
-  { value: "Size", label: "Size" },
-]
 
 const DISPLAY_OPTIONS = [
-  { value: "Week", label: "Week" },
   { value: "Month", label: "Month" },
 ]
 
-function getSegmentValue(segment: string, shipToName: string, skuCode: string): string {
-  const loc = shipToLocations.find((l) => l.name === shipToName)
-  const skuObj = skus.find((s) => s.code === skuCode)
-  switch (segment) {
-    case "First Receiver": return shipToName
-    case "DC Name": return loc?.address || "Unknown"
-    case "Customer Name": return loc?.customer || "Unknown"
-    case "SKU": return skuCode
-    case "Protein": return skuObj?.protein || "Unknown"
-    case "Size": return skuObj?.size || "Unknown"
-    default: return shipToName
-  }
-}
+const STATUS_OPTIONS = [
+  { value: "Forecast", label: "Forecast" },
+  { value: "Actual", label: "Actual" },
+]
 
-function fmt(v: number | null): string {
-  if (v === null) return "-"
-  return v.toLocaleString("en-US")
-}
+// ─── Frozen column widths (px) ───────────────────────────────────────────────
 
-function fmtPct(v: number | null): string {
-  if (v === null) return "-"
-  return `${v}%`
-}
+const SEGMENT_MEASURE_W = 280
 
-// =============================================================================
-// Styles
-// =============================================================================
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
 const s = {
-  page: css`display: flex; flex-direction: column; height: 100%; overflow: hidden;`,
+  page: css`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: ${theme.colors.background};
+  `,
 }
 
-// =============================================================================
-// Component
-// =============================================================================
+// ─── Default view params ─────────────────────────────────────────────────────
+
+const defaultViewParams = {
+  segments: ["retailer", "sku"] as string[],
+  displayBy: "Month",
+  status: "Forecast",
+  filters: [] as FilterEntry[],
+  fromDate: currentYearStart(),
+  toDate: currentYearEnd(),
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export const ShipmentForecastView = () => {
-  const [displayBy, setDisplayBy] = useState("Month")
-  const [fromDate, setFromDate] = useState(DEFAULT_FROM_DATE)
-  const [toDate, setToDate] = useState(DEFAULT_TO_DATE)
-  const [segments, setSegments] = useState<string[]>(["First Receiver"])
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
-  const [overrides, setOverrides] = useState<Record<string, number | null>>({})
-  const [filterShipTo, setFilterShipTo] = useState<string[]>([])
-  const [filterSku, setFilterSku] = useState<string[]>([])
+  const { params, setParam } = useViewParams(defaultViewParams)
 
-  const allShipTos = useMemo(() => [...new Set(shipToLocations.map((l) => l.name))].sort(), [])
-  const allSkus = useMemo(() => skus.map((s) => s.code).sort(), [])
+  const allRecords = useMemo(() => rawData as RawRecord[], [])
 
-  const columns = useMemo(() => {
-    return displayBy === "Week"
-      ? generateWeekColumns(fromDate, toDate)
-      : generateMonthColumns(fromDate, toDate)
-  }, [displayBy, fromDate, toDate])
+  const segmentOptions = useMemo(() =>
+    SEGMENT_COLS.map((k) => ({ value: k, label: SEGMENT_LABEL[k] ?? k })),
+  [])
 
-  const primarySegmentLabel = segments[0] || "First Receiver"
-  const secondarySegmentLabel = segments.length > 1 ? segments[1] : null
+  const filterColumns = useMemo(() =>
+    SEGMENT_COLS.map((col) => ({
+      value: col,
+      label: SEGMENT_LABEL[col] ?? col,
+      options: [...new Set(allRecords.map((r) => r[col] as string).filter(Boolean))].sort(),
+    })),
+  [allRecords])
 
-  // Build hierarchical data
-  const hierarchicalData = useMemo(() => {
-    const primarySegment = segments[0] || "First Receiver"
-    const secondarySegment = segments.length > 1 ? segments[1] : null
-    const primaryGroups = new Map<string, Set<string>>()
+  // ── Filter + status + date range → working set ────────────────────────────
 
-    for (const loc of shipToLocations) {
-      if (filterShipTo.length > 0 && !filterShipTo.includes(loc.name)) continue
-      const filteredSkuList = skus.filter((s) => filterSku.length === 0 || filterSku.includes(s.code))
-      for (const sku of filteredSkuList) {
-        const primaryVal = getSegmentValue(primarySegment, loc.name, sku.code)
-        const secondaryVal = secondarySegment ? getSegmentValue(secondarySegment, loc.name, sku.code) : null
-        if (!primaryGroups.has(primaryVal)) primaryGroups.set(primaryVal, new Set())
-        if (secondaryVal) primaryGroups.get(primaryVal)!.add(secondaryVal)
-      }
-    }
+  const fromDate = useMemo(() => parseShortDate(params.fromDate), [params.fromDate])
+  const toDate = useMemo(() => parseShortDate(params.toDate), [params.toDate])
 
-    const result = new Map<string, string[]>()
-    for (const [primary, secondarySet] of primaryGroups) {
-      result.set(primary, secondarySet.size > 0 ? [...secondarySet].sort() : [])
-    }
-    return result
-  }, [segments, filterShipTo, filterSku])
-
-  // Generate measure data
-  const measureData = useMemo(() => {
-    const result = new Map<string, MeasureRow[]>()
-    for (const [primary, secondaryList] of hierarchicalData) {
-      if (secondaryList.length === 0) {
-        const measures = generateForecastMeasures(primary, primary, columns)
-        result.set(`${primary}|`, measures)
-      } else {
-        for (const secondary of secondaryList) {
-          const key = `${primary}|${secondary}`
-          const measures = generateForecastMeasures(primary, secondary, columns)
-          // Apply overrides
-          const overrideRow = measures.find((m) => m.category === "Planner Override")!
-          const baselineRow = measures.find((m) => m.category === "Baseline Forecast")!
-          const finalRow = measures.find((m) => m.category === "Final Forecast")!
-          const lastHistory = measures.filter((m) => m.category === "History").pop()!
-          const yoyRow = measures.find((m) => m.category === "YoY%")!
-          for (let i = 0; i < columns.length; i++) {
-            const oKey = `${key}|override|${i}`
-            if (overrides[oKey] !== undefined) overrideRow.values[i] = overrides[oKey]
-          }
-          for (let i = 0; i < columns.length; i++) {
-            const ov = overrideRow.values[i]
-            finalRow.values[i] = ov !== null ? ov : baselineRow.values[i]
-            const h = lastHistory.values[i]
-            const f = finalRow.values[i]
-            yoyRow.values[i] = (f !== null && h !== null && h !== 0) ? Math.round(((f / h) - 1) * 100) : null
-          }
-          result.set(key, measures)
-        }
-      }
-    }
-    return result
-  }, [hierarchicalData, columns, overrides])
-
-  // Compute primary aggregates (Final Forecast summed across secondaries)
-  const primaryAggregates = useMemo(() => {
-    const result = new Map<string, number[]>()
-    for (const [primary, secondaryList] of hierarchicalData) {
-      if (secondaryList.length === 0) {
-        const measures = measureData.get(`${primary}|`)
-        const finalRow = measures?.find((m) => m.category === "Final Forecast")
-        result.set(primary, finalRow?.values.map((v) => v ?? 0) || columns.map(() => 0))
-      } else {
-        const totals = columns.map((_, ci) =>
-          secondaryList.reduce((sum, secondary) => {
-            const measures = measureData.get(`${primary}|${secondary}`)
-            const finalRow = measures?.find((m) => m.category === "Final Forecast")
-            return sum + (finalRow?.values[ci] ?? 0)
-          }, 0),
-        )
-        result.set(primary, totals)
-      }
-    }
-    return result
-  }, [hierarchicalData, measureData, columns])
-
-  const toggleGroup = useCallback((key: string) => {
-    setExpandedGroups((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
+  const filtered = useMemo(() => {
+    let rows = allRecords.filter((r) => {
+      if (r.status !== params.status) return false
+      const d = parseShortDate(r.period)
+      return d >= fromDate && d <= toDate
     })
-  }, [])
 
-  const handleOverrideEdit = useCallback((primary: string, secondary: string, colIdx: number, value: string) => {
-    const key = `${primary}|${secondary}|override|${colIdx}`
-    if (value === "" || value === "-") {
-      setOverrides((prev) => { const next = { ...prev }; delete next[key]; return next })
-    } else {
-      const num = Number.parseInt(value, 10)
-      if (!Number.isNaN(num)) setOverrides((prev) => ({ ...prev, [key]: num }))
-    }
-  }, [])
-
-  // Build flat rows for Virtuoso
-  const flatRows = useMemo<FlatRow[]>(() => {
-    const result: FlatRow[] = []
-    for (const [primary, secondaryList] of hierarchicalData) {
-      const aggregates = primaryAggregates.get(primary) || []
-      const hasChildren = secondaryList.length > 0
-      const isExpanded = expandedGroups.has(primary)
-      result.push({ kind: "primary", primary, aggregates, hasChildren, isExpanded })
-      if (isExpanded && hasChildren) {
-        for (const secondary of secondaryList) {
-          const key = `${primary}|${secondary}`
-          const measures = measureData.get(key) || []
-          measures.forEach((measure, measureIdx) => {
-            result.push({ kind: "measure", primary, secondary, measure, measureIdx, isFirstMeasure: measureIdx === 0, hasSecondary: !!secondarySegmentLabel })
-          })
-        }
+    for (const [column, operator, values] of params.filters) {
+      if (values.length === 0) continue
+      if (operator === "in") {
+        rows = rows.filter((r) => values.includes(r[column] as string))
+      } else if (operator === "not in") {
+        rows = rows.filter((r) => !values.includes(r[column] as string))
+      } else if (operator === "contains") {
+        const term = (values[0] ?? "").toLowerCase()
+        if (term) rows = rows.filter((r) => (r[column] as string)?.toLowerCase().includes(term))
       }
     }
-    return result
-  }, [hierarchicalData, primaryAggregates, expandedGroups, measureData, secondarySegmentLabel])
+    return rows
+  }, [allRecords, params.status, params.filters, fromDate, toDate])
 
-  const rowBg = (row: FlatRow): string => {
-    if (row.kind === "primary") return row.isExpanded ? theme.colors.muted : theme.colors.background
-    if (row.kind === "measure") {
-      if (row.measure.category === "Planner Override") return "#fffef7"
-      if (row.measure.category === "Final Forecast") return theme.colors.gray50
-      if (row.measure.category === "YoY%") return theme.colors.gray50
+  // ── Build period columns from the filtered data ───────────────────────────
+
+  const periodColumns = useMemo(() => {
+    const set = new Set<string>()
+    for (const r of filtered) set.add(r.period)
+    return sortPeriods([...set])
+  }, [filtered])
+
+  const periodIndex = useMemo(() => {
+    const map = new Map<string, number>()
+    periodColumns.forEach((p, i) => map.set(p, i))
+    return map
+  }, [periodColumns])
+
+  // ── Column definitions ────────────────────────────────────────────────────
+
+  const columnDefs = useMemo(() => {
+    const labelCols: ColumnDef[] = [{
+      key: "segmentation",
+      header: "segmentation",
+      css: css`
+        position: sticky;
+        left: 0;
+        z-index: 3;
+        min-width: ${SEGMENT_MEASURE_W}px;
+        max-width: ${SEGMENT_MEASURE_W}px;
+        background: ${theme.colors.muted};
+        box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08);
+      `,
+    }]
+
+    const dateCols = periodColumns.map((col) => ({
+      key: col,
+      header: col,
+      css: [tableStyles.right, tableStyles.colMin] as import("@emotion/react").Interpolation<import("../styles").Theme>,
+    }))
+
+    return [
+      ...labelCols,
+      ...dateCols,
+      {
+        key: "_total",
+        header: "Total",
+        css: [tableStyles.right, tableStyles.thTotal, tableStyles.colMin] as import("@emotion/react").Interpolation<import("../styles").Theme>,
+      },
+    ]
+  }, [periodColumns])
+
+  // ── Group + aggregate ─────────────────────────────────────────────────────
+
+  const rows = useMemo<FlatRow[]>(() => {
+    const groups = new Map<string, number[]>()
+
+    for (const r of filtered) {
+      const key = params.segments.map((seg) => (r[seg] as string) ?? "").join(" | ")
+      if (!groups.has(key)) groups.set(key, new Array(periodColumns.length).fill(0))
+      const bucket = groups.get(key)!
+      const pi = periodIndex.get(r.period)
+      if (pi !== undefined) bucket[pi] += r.quantity
     }
-    return theme.colors.background
-  }
 
-  const getRowBg = useCallback((row: FlatRow): string => rowBg(row), [])
+    const totalValues = new Array(periodColumns.length).fill(0)
+    const dataRows: FlatRow[] = []
+
+    for (const [groupKey, values] of [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const total = values.reduce((a, v) => a + v, 0)
+      for (let i = 0; i < values.length; i++) totalValues[i] += values[i]
+      dataRows.push({
+        id: groupKey,
+        segmentLabel: groupKey,
+        values,
+        total,
+        isTotal: false,
+      })
+    }
+
+    const grandTotal = totalValues.reduce((a, v) => a + v, 0)
+    const totalRow: FlatRow = {
+      id: "__total__",
+      segmentLabel: "Total",
+      values: totalValues,
+      total: grandTotal,
+      isTotal: true,
+    }
+
+    return [totalRow, ...dataRows]
+  }, [filtered, params.segments, periodColumns, periodIndex])
+
+  // ── Row styling ───────────────────────────────────────────────────────────
+
+  const getRowBg = useCallback((row: FlatRow): string => {
+    if (row.isTotal) return theme.colors.gray50
+    return theme.colors.background
+  }, [])
+
+  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
     <div css={s.page}>
-      <PageHeader title="Shipment Plans" description="Compare shipment forecasts across SKUs, locations, and time periods" />
+      <PageHeader
+        title="Shipment Plans"
+        description="Shipment forecast by retailer and SKU"
+        actions={
+          <Button variant="outline" size="sm">
+            <Download size={14} />
+            Export
+          </Button>
+        }
+      />
 
       <ViewControls>
-        <ViewControls.SegmentBy
-          segments={segments}
-          onSegmentsChange={setSegments}
-          options={SEGMENT_OPTIONS}
-        />
         <ViewControls.DisplayBy
-          value={displayBy}
-          onChange={setDisplayBy}
+          value={params.displayBy}
+          onChange={(v) => setParam("displayBy", v)}
           options={DISPLAY_OPTIONS}
         />
-        <ViewControls.FilterDropdown
-          label="Ship To"
-          values={filterShipTo}
-          onChange={setFilterShipTo}
-          options={allShipTos.map((v) => ({ value: v, label: v }))}
+        <ViewControls.SegmentBy
+          segments={params.segments}
+          onSegmentsChange={(v) => setParam("segments", v)}
+          options={segmentOptions}
         />
-        <ViewControls.FilterDropdown
-          label="SKU"
-          values={filterSku}
-          onChange={setFilterSku}
-          options={allSkus.map((v) => ({ value: v, label: v }))}
+        <ViewControls.AggregateBy
+          label="Display by"
+          value={params.status}
+          onChange={(v) => setParam("status", v)}
+          options={STATUS_OPTIONS}
+        />
+        <ViewControls.FilterBy
+          filters={params.filters}
+          onFiltersChange={(v) => setParam("filters", v)}
+          columns={filterColumns}
         />
         <ViewControls.DateRange
-          from={fromDate}
-          to={toDate}
-          onFromChange={setFromDate}
-          onToChange={setToDate}
+          from={params.fromDate}
+          to={params.toDate}
+          onFromChange={(v) => setParam("fromDate", v)}
+          onToChange={(v) => setParam("toDate", v)}
         />
       </ViewControls>
 
-      {/* Table */}
       <div css={tableStyles.wrap}>
         <DataTable<FlatRow>
-          data={flatRows}
+          data={rows}
+          columns={columnDefs}
           getRowBg={getRowBg}
-          fixedHeaderContent={() => (
-            <tr>
-              <TableHead css={[tableStyles.th, tableStyles.stickyColHead]}>
-                {primarySegmentLabel}
-              </TableHead>
-              {secondarySegmentLabel && (
-                <TableHead css={[tableStyles.th, css`min-width: 7rem;`]}>
-                  {secondarySegmentLabel}
-                </TableHead>
-              )}
-              <TableHead css={[tableStyles.th, css`min-width: 7.5rem;`]}>Measure</TableHead>
-              <TableHead css={[tableStyles.th, css`min-width: 4.5rem;`]}>Year</TableHead>
-              {columns.map((col) => (
-                <TableHead key={col} css={[tableStyles.th, tableStyles.right, tableStyles.colMin]}>{col}</TableHead>
-              ))}
-              <TableHead css={[tableStyles.th, tableStyles.right, tableStyles.thTotal, tableStyles.colMin]}>Total</TableHead>
-            </tr>
-          )}
-          itemContent={(_, row) => {
-            if (row.kind === "primary") {
-              const total = row.aggregates.reduce((acc, v) => acc + v, 0)
-              return (
-                <>
-                  <TableCell
-                    css={css`
-                      position: sticky; left: 0; z-index: 1; background: inherit;
-                      padding: 0.5rem 0.75rem; font-weight: 500; color: ${theme.colors.foreground};
-                      ${row.hasChildren ? "cursor: pointer;" : ""}
-                    `}
-                    onClick={row.hasChildren ? () => toggleGroup(row.primary) : undefined}
-                  >
-                    <div css={css`display: flex; align-items: center; gap: 0.375rem;`}>
-                      {row.hasChildren ? (
-                        row.isExpanded
-                          ? <ChevronDown css={css`width: 0.875rem; height: 0.875rem; flex-shrink: 0; color: ${theme.colors.mutedForeground};`} />
-                          : <ChevronRight css={css`width: 0.875rem; height: 0.875rem; flex-shrink: 0; color: ${theme.colors.mutedForeground};`} />
-                      ) : (
-                        <span css={css`width: 0.875rem; display: inline-block;`} />
-                      )}
-                      <span>{row.primary}</span>
-                    </div>
-                  </TableCell>
-                  {secondarySegmentLabel && <TableCell css={css`padding: 0.5rem 0.75rem;`} />}
-                  <TableCell css={css`padding: 0.5rem 0.75rem; color: ${theme.colors.mutedForeground};`}>
-                    Final Forecast
-                  </TableCell>
-                  <TableCell css={css`padding: 0.5rem 0.75rem;`} />
-                  {row.aggregates.map((v, i) => (
-                    <TableCell key={i} css={css`
-                      padding: 0.5rem 0.5rem; text-align: right;
-                      font-variant-numeric: tabular-nums;
-                      color: ${theme.colors.mutedForeground};
-                    `}>
-                      {fmt(v)}
-                    </TableCell>
-                  ))}
-                  <TableCell css={css`
-                    padding: 0.5rem 0.75rem; text-align: right;
-                    font-variant-numeric: tabular-nums; font-weight: 600;
+          renderCells={(row) => {
+            const isTotalRow = row.isTotal
+            const weight = isTotalRow ? "600" : "400"
+            const color = isTotalRow ? theme.colors.foreground : theme.colors.foreground
+            const bg = isTotalRow ? theme.colors.gray50 : theme.colors.background
+
+            return (
+              <>
+                <TableCell
+                  css={css`
+                    position: sticky;
+                    left: 0;
+                    z-index: 1;
+                    min-width: ${SEGMENT_MEASURE_W}px;
+                    max-width: ${SEGMENT_MEASURE_W}px;
+                    background: ${bg};
+                    padding: 0.5rem 0.75rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     color: ${theme.colors.foreground};
-                  `}>
-                    {fmt(total)}
-                  </TableCell>
-                </>
-              )
-            }
+                    font-weight: ${isTotalRow ? "600" : "500"};
+                    box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08);
+                  `}
+                >
+                  {row.segmentLabel}
+                </TableCell>
 
-            if (row.kind === "measure") {
-              const { measure, secondary, primary, measureIdx, isFirstMeasure, hasSecondary } = row
-              const total = measure.values.reduce<number>((acc, v) => acc + (v ?? 0), 0)
-              const isOverride = measure.category === "Planner Override"
-              const isFinal = measure.category === "Final Forecast"
-              const isYoy = measure.category === "YoY%"
+                {periodColumns.map((col, ci) => (
+                  <TableCell
+                    key={col}
+                    css={css`
+                      padding: 0.5rem 0.5rem;
+                      text-align: right;
+                      font-variant-numeric: tabular-nums;
+                      color: ${color};
+                      font-weight: ${weight};
+                    `}
+                  >
+                    {formatNumberOrNull(row.values[ci])}
+                  </TableCell>
+                ))}
 
-              return (
-                <>
-                  <TableCell css={css`
-                    position: sticky; left: 0; z-index: 1; background: inherit;
-                    padding: ${isFirstMeasure ? "0.5rem" : "0.375rem"} 0.75rem 0.375rem 2rem;
-                  `} />
-                  {hasSecondary && (
-                    <TableCell css={css`padding: 0.375rem 0.75rem; color: ${theme.colors.mutedForeground};`}>
-                      {measureIdx === 0 ? secondary : ""}
-                    </TableCell>
-                  )}
-                  <TableCell css={css`padding: 0.375rem 0.75rem; color: ${theme.colors.mutedForeground};`}>
-                    {measure.category}
-                  </TableCell>
-                  <TableCell css={css`padding: 0.375rem 0.75rem; color: ${theme.colors.mutedForeground};`}>
-                    {measure.year}
-                  </TableCell>
-                  {measure.values.map((v, ci) => (
-                    <TableCell key={ci} css={css`padding: 0.375rem 0.5rem; text-align: right; font-variant-numeric: tabular-nums;`}>
-                      {isOverride ? (
-                        <input
-                          type="text"
-                          css={css`
-                            width: 100%;
-                            background: transparent;
-                            text-align: right;
-                            font-size: 0.75rem;
-                            font-variant-numeric: tabular-nums;
-                            border: none;
-                            outline: none;
-                            color: ${theme.colors.foreground};
-                            &:focus { background: rgba(254, 240, 138, 0.5); border-radius: 0.25rem; }
-                          `}
-                          defaultValue={v !== null ? String(v) : ""}
-                          placeholder="-"
-                          onBlur={(e) => handleOverrideEdit(primary, secondary, ci, e.target.value)}
-                        />
-                      ) : isYoy ? (
-                        <span css={css`
-                          color: ${v !== null && v > 0 ? "#16a34a" : v !== null && v < 0 ? "#dc2626" : theme.colors.mutedForeground};
-                        `}>
-                          {fmtPct(v)}
-                        </span>
-                      ) : (
-                        <span css={css`
-                          color: ${isFinal ? theme.colors.foreground : theme.colors.mutedForeground};
-                          font-weight: ${isFinal ? 500 : "inherit"};
-                        `}>
-                          {fmt(v)}
-                        </span>
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell css={css`padding: 0.375rem 0.75rem; text-align: right; font-variant-numeric: tabular-nums;`}>
-                    {isYoy ? (
-                      <span css={css`color: ${theme.colors.mutedForeground};`}>-</span>
-                    ) : (
-                      <span css={css`
-                        font-weight: ${isFinal ? 600 : "inherit"};
-                        color: ${isFinal ? theme.colors.foreground : theme.colors.mutedForeground};
-                      `}>
-                        {fmt(total)}
-                      </span>
-                    )}
-                  </TableCell>
-                </>
-              )
-            }
-
-            return null
+                <TableCell
+                  css={css`
+                    padding: 0.5rem 0.75rem;
+                    text-align: right;
+                    font-variant-numeric: tabular-nums;
+                    color: ${theme.colors.foreground};
+                    font-weight: 600;
+                  `}
+                >
+                  {formatNumberOrNull(row.total)}
+                </TableCell>
+              </>
+            )
           }}
         />
       </div>
     </div>
   )
 }
-

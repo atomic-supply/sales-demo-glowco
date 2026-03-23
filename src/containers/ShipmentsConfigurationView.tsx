@@ -137,7 +137,7 @@ export function ShipmentsConfigurationView() {
       <div css={tableStyles.wrap}>
         <DataTable<DemandMapping>
           data={mappings}
-          fixedHeaderContent={() => (
+          renderHeader={() => (
             <tr>
               <TableHead css={tableStyles.th}>Retailer</TableHead>
               <TableHead css={tableStyles.th}>
@@ -198,7 +198,7 @@ export function ShipmentsConfigurationView() {
               <TableHead css={tableStyles.th}>Actions</TableHead>
             </tr>
           )}
-          itemContent={(_, mapping) => {
+          renderCells={(mapping) => {
             const isEditing = editingId === mapping.id
             const values = isEditing && editValues ? editValues : mapping
             return (

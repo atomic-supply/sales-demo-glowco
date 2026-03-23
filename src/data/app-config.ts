@@ -26,7 +26,7 @@ export const terminology = {
   },
 
   plans: {
-    consumption: "Demand Plan",
+    consumption: "Forecast",
     shipments: "Shipments Walk",
     production: "Production Plan",
     kitting: "Kitting Plan",

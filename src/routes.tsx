@@ -20,9 +20,9 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/data-hub" replace /> },
           { path: "data-hub", element: <DataHubView /> },
-          { path: "retailers", element: <DemandPlanView /> },
-          { path: "retailers/validation", element: <RetailValidationView /> },
-          { path: "shipments", element: <SupplyWalkView /> },
+          { path: "demand/forecast", element: <DemandPlanView /> },
+          { path: "demand/validation", element: <RetailValidationView /> },
+          { path: "shipments/walk", element: <SupplyWalkView /> },
           { path: "shipments/forecast", element: <ShipmentForecastView /> },
           { path: "shipments/validation", element: <ShipmentsValidationView /> },
           { path: "shipments/configuration", element: <ShipmentsConfigurationView /> },

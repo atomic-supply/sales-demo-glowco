@@ -1,0 +1,116 @@
+---
+description: CSS organization patterns and conventions for the frontend service
+---
+
+# Frontend CSS Organization Rules
+
+## All CSS in `styles/` Directory
+
+**CRITICAL**: All CSS-related files must be organized in `src/styles/` directory.
+
+### Directory Structure
+
+```
+frontend/src/styles/
+├── base/                    # Base CSS files
+│   ├── reset.css           # CSS reset and base element styles
+│   ├── animations.css      # Global animations
+│   └── scrollbar.css       # Custom scrollbar styling
+├── theme/                   # Theme definition and helpers
+│   ├── theme.ts            # Theme object definition
+│   └── theme-helpers.ts    # Type-safe theme access functions
+├── mixins/                  # Reusable style patterns
+│   ├── common.ts           # Common patterns (cards, hover, focus, etc.)
+│   └── layout.ts           # Layout utilities (page, flex, grid)
+├── examples/                # Example components
+│   └── ExampleComponent.tsx
+├── index.css                # Main CSS entry point (imports base styles)
+└── index.ts                 # TypeScript exports for utilities/mixins
+```
+
+### Rules
+
+1. **Never create CSS files outside `styles/`**
+   - ❌ `src/App.css`, `src/index.css`, `src/components/MyComponent.css`
+   - ✅ All CSS in `src/styles/`
+
+2. **Use Emotion for component styles**
+   - Component-specific styles use Emotion's `css` prop
+   - Import theme helpers and mixins from `@/styles`
+
+3. **Use theme values, never hardcode**
+   - ❌ `background-color: oklch(0.205 0 0);`
+   - ✅ `background-color: ${theme.colors.primary};`
+   - ✅ `background-color: ${themeColor('primary')};` (for dynamic access)
+
+4. **Compose mixins for common patterns**
+   - ❌ Duplicating card styles in multiple components
+   - ✅ Use `cardStyle` mixin from `@/styles/mixins/common`
+
+### Usage Examples
+
+#### ✅ GOOD - Using theme and mixins
+
+```tsx
+import { css } from '@emotion/react'
+import { theme } from '@/styles/theme'
+import { cardStyle, hoverable, focusRing } from '@/styles'
+
+const MyComponent = () => {
+  const containerStyle = css`
+    ${cardStyle}
+    ${hoverable}
+    ${focusRing}
+    padding: ${theme.spacing.md};
+    background: ${theme.colors.background};
+  `
+  
+  return <div css={containerStyle}>Content</div>
+}
+```
+
+#### ❌ BAD - Hardcoded values and scattered CSS
+
+```tsx
+// ❌ Don't create CSS files outside styles/
+import './MyComponent.css'  // WRONG
+
+// ❌ Don't hardcode theme values
+const style = css`
+  background-color: oklch(0.205 0 0);  // WRONG
+  padding: 1rem;  // WRONG
+`
+```
+
+### Import Paths
+
+- **CSS files**: Imported in `src/styles/index.css` (main entry point)
+- **TypeScript utilities**: Import from `@/styles` or `@/styles/theme/theme-helpers`
+- **Mixins**: Import from `@/styles` or `@/styles/mixins/common`
+
+### Main CSS Entry Point
+
+The main CSS file is `src/styles/index.css` and is imported in `src/main.tsx`:
+
+```tsx
+import './styles/index.css'
+```
+
+This file imports all base styles and defines CSS variables.
+
+### Migration Checklist
+
+When working on frontend CSS:
+
+- [ ] All CSS files are in `src/styles/`
+- [ ] No hardcoded theme values (colors, spacing, etc.)
+- [ ] Using theme helpers or direct theme access
+- [ ] Common patterns use mixins from `@/styles/mixins`
+- [ ] Component styles use Emotion `css` prop
+- [ ] Updated documentation if adding new patterns
+
+### Reference
+
+- Full documentation: `frontend/src/styles/README.md`
+- Theme definition: `frontend/src/styles/theme/theme.ts`
+- Example component: `frontend/src/styles/examples/ExampleComponent.tsx`

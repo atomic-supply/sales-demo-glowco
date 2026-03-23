@@ -45,6 +45,8 @@ export interface AggregateByProps {
   onChange: (value: string) => void;
   options: ColumnOption[];
   disabled?: boolean;
+  /** Override the default "Aggregate by" label */
+  label?: string;
 }
 
 /** DisplayBy — single-select dropdown (date granularity, etc.) */

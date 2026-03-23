@@ -65,8 +65,3 @@ export function buildForecastRows(): ForecastRow[] {
   return rows
 }
 
-export const DEFAULT_FROM_DATE = "12/01/2025"
-export const DEFAULT_TO_DATE = "03/31/2026"
-
-export const FROM_DATE_OPTIONS = ["10/01/2025", "11/01/2025", "12/01/2025", "01/01/2026"]
-export const TO_DATE_OPTIONS = ["02/28/2026", "03/31/2026", "06/30/2026", "09/30/2026"]
