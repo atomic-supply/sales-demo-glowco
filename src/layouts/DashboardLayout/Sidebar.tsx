@@ -11,6 +11,9 @@ import {
   BarChart3,
   Footprints,
   User,
+  Package,
+  ClipboardList,
+  Inbox,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router"
 import { terminology } from "../../data/app-config"
@@ -71,6 +74,10 @@ const sidebarItems: SidebarItem[] = [
       { href: "/shipments/configuration", name: "Configuration", icon: Settings as Icon },
     ],
   },
+  { type: "header", name: "Supply" },
+  { type: "link", href: "/inventory-health", name: "Inventory Health", icon: ClipboardList as Icon },
+  { type: "link", href: "/inventory-health-mrp", name: "Inventory Health - MRP", icon: Package as Icon },
+  { type: "link", href: "/po-inbox", name: "PO Inbox", icon: Inbox as Icon },
   { type: "header", name: "AI Assistant" },
   { type: "link", href: "/nucleus", name: "Nucleus", icon: Atom as Icon, isNucleus: true },
 ]

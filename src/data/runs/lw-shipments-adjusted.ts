@@ -9,7 +9,7 @@ import { coManProductionData, kittingPlanData, materialsPlanData } from "./lw-in
 
 export const allocationPlanData = [
   {
-    sku: "CO24",
+    sku: "OB24",
     startingNetworkInventory: 4410,
     inboundFG: [576, 558, 540, 529, 518, 508, 497, 487, 477, 467, 457, 447, 437, 427, 417, 407],
     warehouses: [
@@ -19,7 +19,7 @@ export const allocationPlanData = [
     ],
   },
   {
-    sku: "CB24",
+    sku: "TK24",
     startingNetworkInventory: 3330,
     inboundFG: [504, 495, 486, 477, 468, 459, 450, 441, 432, 423, 414, 405, 396, 387, 378, 369],
     warehouses: [

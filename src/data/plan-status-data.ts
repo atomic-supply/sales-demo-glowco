@@ -70,15 +70,15 @@ export const compDemandByChannel = [
 ]
 
 export const productionByComan = [
-  { coman: "Apex Manufacturing", production: 3700000, capacity: 4000000, utilization: 92.5 },
-  { coman: "Pinnacle Foods", production: 2840000, capacity: 3200000, utilization: 88.8 },
-  { coman: "Cascade Nutrition", production: 1760000, capacity: 2000000, utilization: 88.0 },
+  { coman: "San Bernardino Facility", production: 3700000, capacity: 4000000, utilization: 92.5 },
+  { coman: "Midwest Meat Co", production: 2840000, capacity: 3200000, utilization: 88.8 },
+  { coman: "Pacific Jerky Works", production: 1760000, capacity: 2000000, utilization: 88.0 },
 ]
 
 export const compProductionByComan = [
-  { coman: "Apex Manufacturing", production: 3500000, capacity: 4000000, utilization: 87.5 },
-  { coman: "Pinnacle Foods", production: 2700000, capacity: 3200000, utilization: 84.4 },
-  { coman: "Cascade Nutrition", production: 1680000, capacity: 2000000, utilization: 84.0 },
+  { coman: "San Bernardino Facility", production: 3500000, capacity: 4000000, utilization: 87.5 },
+  { coman: "Midwest Meat Co", production: 2700000, capacity: 3200000, utilization: 84.4 },
+  { coman: "Pacific Jerky Works", production: 1680000, capacity: 2000000, utilization: 84.0 },
 ]
 
 export const inventoryBy3PL = [
@@ -96,19 +96,19 @@ export const compInventoryBy3PL = [
 ]
 
 export const skuSummary = [
-  { sku: "CO24", flavor: "Original Beef (24ct)", demand: 7420000, inventory: 8920000, wos: 4.8, status: "ok" },
-  { sku: "CJ24", flavor: "Jalapeno Beef (24ct)", demand: 6050000, inventory: 7140000, wos: 5.9, status: "ok" },
-  { sku: "CB24", flavor: "Original Turkey (24ct)", demand: 4920000, inventory: 3740000, wos: 3.8, status: "warning" },
-  { sku: "CTOTJ24", flavor: "Taco Original Turkey (24ct)", demand: 4190000, inventory: 4430000, wos: 5.3, status: "ok" },
-  { sku: "COP12", flavor: "Original Beef (12ct)", demand: 3800000, inventory: 3120000, wos: 4.1, status: "warning" },
+  { sku: "OB24", flavor: "Original Beef (24ct)", demand: 7420000, inventory: 8920000, wos: 4.8, status: "ok" },
+  { sku: "MH24", flavor: "Jalapeno Beef (24ct)", demand: 6050000, inventory: 7140000, wos: 5.9, status: "ok" },
+  { sku: "TK24", flavor: "Original Turkey (24ct)", demand: 4920000, inventory: 3740000, wos: 3.8, status: "warning" },
+  { sku: "HC24", flavor: "Taco Original Turkey (24ct)", demand: 4190000, inventory: 4430000, wos: 5.3, status: "ok" },
+  { sku: "VP12", flavor: "Original Beef (12ct)", demand: 3800000, inventory: 3120000, wos: 4.1, status: "warning" },
   { sku: "CSR24", flavor: "Salt & Pepper Venison (24ct)", demand: 2900000, inventory: 3560000, wos: 6.1, status: "ok" },
 ]
 
 export const compSkuSummary = [
-  { sku: "CO24", flavor: "Original Beef (24ct)", demand: 7200000, inventory: 8500000, wos: 4.5, status: "ok" },
-  { sku: "CJ24", flavor: "Jalapeno Beef (24ct)", demand: 5800000, inventory: 6800000, wos: 5.5, status: "ok" },
-  { sku: "CB24", flavor: "Original Turkey (24ct)", demand: 4700000, inventory: 3400000, wos: 3.4, status: "warning" },
-  { sku: "CTOTJ24", flavor: "Taco Original Turkey (24ct)", demand: 4000000, inventory: 4200000, wos: 5.0, status: "ok" },
-  { sku: "COP12", flavor: "Original Beef (12ct)", demand: 3600000, inventory: 2900000, wos: 3.8, status: "warning" },
+  { sku: "OB24", flavor: "Original Beef (24ct)", demand: 7200000, inventory: 8500000, wos: 4.5, status: "ok" },
+  { sku: "MH24", flavor: "Jalapeno Beef (24ct)", demand: 5800000, inventory: 6800000, wos: 5.5, status: "ok" },
+  { sku: "TK24", flavor: "Original Turkey (24ct)", demand: 4700000, inventory: 3400000, wos: 3.4, status: "warning" },
+  { sku: "HC24", flavor: "Taco Original Turkey (24ct)", demand: 4000000, inventory: 4200000, wos: 5.0, status: "ok" },
+  { sku: "VP12", flavor: "Original Beef (12ct)", demand: 3600000, inventory: 2900000, wos: 3.8, status: "warning" },
   { sku: "CSR24", flavor: "Salt & Pepper Venison (24ct)", demand: 2800000, inventory: 3300000, wos: 5.7, status: "ok" },
 ]

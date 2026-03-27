@@ -44,7 +44,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
   return [
     {
       id: "ADJ-001",
-      sku: "CB24",
+      sku: "TK24",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/15/25",
@@ -57,7 +57,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-002",
-      sku: "CB24",
+      sku: "TK24",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/22/25",
@@ -70,7 +70,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-003",
-      sku: "CB24",
+      sku: "TK24",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/29/25",
@@ -83,7 +83,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-004",
-      sku: "CB24",
+      sku: "TK24",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "01/26/26",
@@ -96,7 +96,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-005",
-      sku: "COP12",
+      sku: "VP12",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/15/25",
@@ -109,7 +109,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-006",
-      sku: "COP12",
+      sku: "VP12",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/22/25",
@@ -122,7 +122,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-007",
-      sku: "COP12",
+      sku: "VP12",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "01/26/26",
@@ -135,7 +135,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-008",
-      sku: "CO24",
+      sku: "OB24",
       shipTo: "Amazon.com (US) - Pacific 3PL",
       shipFrom: "Meridian Logistics",
       timePeriod: "12/22/25",
@@ -148,7 +148,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-009",
-      sku: "CJ24",
+      sku: "MH24",
       shipTo: "Amazon.com (US) - Central 3PL",
       shipFrom: "Vertex B2B - Central",
       timePeriod: "01/05/26",
@@ -161,7 +161,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-010",
-      sku: "CO24",
+      sku: "OB24",
       shipTo: "velo.com - Pacific 3PL",
       shipFrom: "Vertex B2B - Central",
       timePeriod: "01/05/26",
@@ -174,7 +174,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-011",
-      sku: "CTOTJ24",
+      sku: "HC24",
       shipTo: "Target - Central 3PL",
       shipFrom: "Meridian Logistics",
       timePeriod: "01/12/26",
@@ -187,7 +187,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-012",
-      sku: "CO24",
+      sku: "OB24",
       shipTo: "Whole Foods - East Coast 3PL",
       shipFrom: "Meridian Logistics",
       timePeriod: "01/12/26",
@@ -200,7 +200,7 @@ export const generateSampleAdjustments = (): ShipmentAdjustment[] => {
     },
     {
       id: "ADJ-013",
-      sku: "COP12",
+      sku: "VP12",
       shipTo: "Walmart - Meridian Logistics",
       shipFrom: "Meridian Logistics",
       timePeriod: "01/19/26",
@@ -237,7 +237,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
 
   const locationData: Record<string, Record<string, SkuPlanRow>> = {
     "Walmart - Meridian Logistics": {
-      "CB24": {
+      "TK24": {
         startingInventory: [820, 810, 850, 880, 860, 880, 870, 880, 885, 890, 895],
         retailDemand: [185, 192, 185, 192, 185, 192, 185, 185, 190, 185, 185],
         arrivingInventory: [175, 232, 215, 192, 210, 185, 195, 190, 190, 190, 185],
@@ -249,7 +249,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
         overrides: [null, null, 250, 280, 240, null, null, null, 120, null, null],
         overrideReasons: ["", "", "Walmart promotion - stock up for Q1", "Walmart promotion - peak holiday volume", "Walmart promotion - end of year push", "", "", "", "Reduce Feb - drawdown excess inventory", "", ""],
       },
-      "COP12": {
+      "VP12": {
         startingInventory: [580, 570, 600, 620, 605, 620, 615, 620, 625, 630, 635],
         retailDemand: [130, 136, 130, 136, 130, 136, 130, 130, 135, 130, 130],
         arrivingInventory: [120, 166, 150, 121, 145, 131, 130, 135, 140, 135, 130],
@@ -263,7 +263,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
       },
     },
     "Amazon.com (US) - Pacific 3PL": {
-      "CO24": {
+      "OB24": {
         startingInventory: [520, 500, 530, 545, 530, 545, 540, 545, 548, 550, 555],
         retailDemand: [245, 250, 245, 250, 245, 250, 245, 245, 248, 245, 245],
         arrivingInventory: [225, 280, 260, 235, 260, 245, 250, 248, 250, 245, 240],
@@ -277,7 +277,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
       },
     },
     "Amazon.com (US) - Central 3PL": {
-      "CJ24": {
+      "MH24": {
         startingInventory: [380, 365, 390, 400, 388, 400, 395, 400, 402, 405, 408],
         retailDemand: [158, 165, 158, 165, 158, 165, 158, 158, 160, 158, 158],
         arrivingInventory: [143, 190, 168, 153, 166, 160, 158, 160, 163, 158, 155],
@@ -291,7 +291,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
       },
     },
     "velo.com - Pacific 3PL": {
-      "CO24": {
+      "OB24": {
         startingInventory: [290, 278, 295, 305, 295, 305, 300, 305, 308, 310, 312],
         retailDemand: [142, 148, 142, 148, 142, 148, 142, 142, 145, 142, 142],
         arrivingInventory: [130, 165, 152, 138, 152, 143, 147, 145, 147, 142, 140],
@@ -305,7 +305,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
       },
     },
     "Target - Central 3PL": {
-      "CTOTJ24": {
+      "HC24": {
         startingInventory: [340, 325, 345, 355, 345, 355, 350, 355, 358, 360, 362],
         retailDemand: [168, 172, 168, 172, 168, 172, 168, 168, 170, 168, 168],
         arrivingInventory: [153, 192, 178, 162, 178, 167, 173, 171, 170, 168, 165],
@@ -319,7 +319,7 @@ export const getShipmentPlanData = (shipTo: string, sku: string, timePeriod: str
       },
     },
     "Whole Foods - East Coast 3PL": {
-      "CO24": {
+      "OB24": {
         startingInventory: [260, 250, 265, 275, 265, 275, 270, 275, 278, 280, 282],
         retailDemand: [114, 120, 114, 120, 114, 120, 114, 114, 116, 114, 114],
         arrivingInventory: [104, 135, 124, 110, 124, 115, 119, 117, 118, 114, 112],

@@ -9,13 +9,13 @@ import {
 // Kitting adjusted to smooth demand and account for capacity constraints
 const kittingPlanData = [
   {
-    sku: "CO24",
+    sku: "OB24",
     initialBulkInventory: 7900,
     kittingDemand: [470, 702, 1224, 936, 1168, 1002, 1248, 930, 852, 936, 826, 684, 580, 578, 560, 550],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
     kitCenters: [
       {
-        name: "Apex Kitting",
+        name: "SB Kitting",
         weeklyCapacity: Array(16).fill(1100),
         weeklyPlanned: [420, 520, 900, 680, 840, 720, 900, 680, 630, 680, 600, 490, 420, 420, 410, 400],
       },
@@ -27,38 +27,38 @@ const kittingPlanData = [
     ],
   },
   {
-    sku: "CJ24",
+    sku: "MH24",
     initialBulkInventory: 6600,
     kittingDemand: [356, 530, 924, 710, 884, 756, 944, 702, 644, 708, 624, 516, 437, 437, 420, 410],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     kitCenters: [
       {
-        name: "Apex Kitting",
+        name: "SB Kitting",
         weeklyCapacity: Array(16).fill(800),
         weeklyPlanned: [280, 360, 640, 490, 610, 520, 650, 484, 444, 488, 430, 356, 300, 300, 290, 280],
       },
       {
-        name: "Summit Kitting",
+        name: "Midwest Kitting",
         weeklyCapacity: Array(16).fill(500),
         weeklyPlanned: [76, 170, 284, 220, 274, 236, 294, 218, 200, 220, 194, 160, 137, 137, 130, 130],
       },
     ],
   },
   {
-    sku: "CB24",
+    sku: "TK24",
     initialBulkInventory: 4400,
     kittingDemand: [266, 396, 690, 530, 661, 566, 706, 525, 482, 530, 468, 386, 328, 326, 314, 307],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     kitCenters: [
       {
-        name: "Apex Kitting",
+        name: "SB Kitting",
         weeklyCapacity: Array(16).fill(600),
         weeklyPlanned: [266, 396, 690, 530, 661, 566, 706, 525, 482, 530, 468, 386, 328, 326, 314, 307],
       },
     ],
   },
   {
-    sku: "CTOTJ24",
+    sku: "HC24",
     initialBulkInventory: 3300,
     kittingDemand: [228, 342, 596, 458, 570, 488, 610, 453, 416, 457, 403, 333, 283, 280, 270, 263],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -71,13 +71,13 @@ const kittingPlanData = [
     ],
   },
   {
-    sku: "COP12",
+    sku: "VP12",
     initialBulkInventory: 2560,
     kittingDemand: [189, 282, 492, 378, 472, 404, 504, 374, 344, 378, 334, 276, 234, 234, 226, 220],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     kitCenters: [
       {
-        name: "Summit Kitting",
+        name: "Midwest Kitting",
         weeklyCapacity: Array(16).fill(400),
         weeklyPlanned: [189, 282, 492, 378, 472, 404, 504, 374, 344, 378, 334, 276, 234, 234, 226, 220],
       },
@@ -88,7 +88,7 @@ const kittingPlanData = [
 // Allocation adjusted - planner shifted inventory to East Coast 3PL for holiday
 const allocationPlanData = [
   {
-    sku: "CO24",
+    sku: "OB24",
     startingNetworkInventory: 5700,
     inboundFG: [760, 740, 810, 780, 750, 790, 820, 760, 740, 810, 780, 750, 790, 820, 760, 740],
     warehouses: [
@@ -116,7 +116,7 @@ const allocationPlanData = [
     ],
   },
   {
-    sku: "CB24",
+    sku: "TK24",
     startingNetworkInventory: 4320,
     inboundFG: [660, 650, 690, 676, 640, 680, 710, 660, 650, 690, 676, 640, 680, 710, 660, 650],
     warehouses: [
@@ -137,7 +137,7 @@ const allocationPlanData = [
     ],
   },
   {
-    sku: "CTOTJ24",
+    sku: "HC24",
     startingNetworkInventory: 3120,
     inboundFG: [440, 430, 470, 450, 420, 460, 480, 440, 430, 470, 450, 420, 460, 480, 440, 430],
     warehouses: [

@@ -1,5 +1,6 @@
 // ============================================================================
 // UNIFIED DATA - Master reference entities and planning data
+// Archer Meat Snacks Demo
 // ============================================================================
 
 // ============================================================================
@@ -85,57 +86,57 @@ export interface Material {
 // ============================================================================
 
 export const skus: SKU[] = [
-  // Original Oat SKUs
-  { id: "sku-001", code: "CO24", name: "Original Oat Bar 24ct Box", flavor: "Original Oat", species: "Plant-Based", productCategory: "Original Oat", protein: "Oat Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-002", code: "CO144", name: "Original Oat Bar 144ct Master Case", flavor: "Original Oat", species: "Plant-Based", productCategory: "Original Oat", protein: "Oat Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 144, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-003", code: "COP8", name: "Original Oat Bar 8ct Pouch", flavor: "Original Oat", species: "Plant-Based", productCategory: "Original Oat", protein: "Oat Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 8, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-004", code: "COP12", name: "Original Oat Bar 12ct Club Pouch", flavor: "Original Oat", species: "Plant-Based", productCategory: "Original Oat", protein: "Oat Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 12, palletTi: 12, palletHi: 8, isActive: true },
-  // Dark Chocolate SKUs
-  { id: "sku-005", code: "CJ24", name: "Dark Chocolate Bar 24ct Box", flavor: "Dark Chocolate", species: "Plant-Based", productCategory: "Dark Chocolate", protein: "Pea Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-006", code: "CH24", name: "Hazelnut Crunch Bar 24ct Box", flavor: "Hazelnut Crunch", species: "Plant-Based", productCategory: "Dark Chocolate", protein: "Pea Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-007", code: "CIB24", name: "Cinnamon Roll Bar 24ct Box", flavor: "Cinnamon Roll", species: "Plant-Based", productCategory: "Original Oat", protein: "Oat Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-008", code: "CB24", name: "Peanut Butter Bar 24ct Box", flavor: "Peanut Butter", species: "Plant-Based", productCategory: "Peanut Butter", protein: "Oat Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  // Vanilla Almond SKUs
-  { id: "sku-009", code: "CTOTJ24", name: "Vanilla Almond Bar 24ct Box", flavor: "Vanilla Almond", species: "Plant-Based", productCategory: "Vanilla Almond", protein: "Almond Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  { id: "sku-010", code: "CTOTJP12", name: "Vanilla Almond Bar 12ct Club Pouch", flavor: "Vanilla Almond", species: "Plant-Based", productCategory: "Vanilla Almond", protein: "Almond Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 12, palletTi: 12, palletHi: 8, isActive: true },
-  // Mixed Berry SKUs
-  { id: "sku-011", code: "COV24", name: "Mixed Berry Bar 24ct Box", flavor: "Mixed Berry", species: "Plant-Based", productCategory: "Mixed Berry", protein: "Oat Protein", size: "Full Size", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  // Lemon Zest SKUs
-  { id: "sku-012", code: "CKO24", name: "Lemon Zest Bar 24ct Box", flavor: "Lemon Zest", species: "Plant-Based", productCategory: "Lemon Zest", protein: "Oat Protein", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
-  // Mini Bites SKUs
-  { id: "sku-013", code: "LCO24", name: "Mini Original Oat Bites 24ct", flavor: "Original Oat", species: "Plant-Based", productCategory: "Bites", protein: "Oat Protein", size: "Mini", planner: "Alex", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  // Beef Jerky SKUs
+  { id: "sku-001", code: "OB24", name: "Original Beef Jerky 2.5oz 24ct Shipper", flavor: "Original", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "2.5oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-002", code: "OB144", name: "Original Beef Jerky 2.5oz 144ct Master Case", flavor: "Original", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "2.5oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 144, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-003", code: "MH24", name: "Mango Habanero Jerky 2.5oz 24ct Shipper", flavor: "Mango Habanero", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "2.5oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-004", code: "TK24", name: "Teriyaki Jerky 2.5oz 24ct Shipper", flavor: "Teriyaki", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "2.5oz", planner: "Sam", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-005", code: "HC24", name: "Hatch Chile Jerky 2.5oz 24ct Shipper", flavor: "Hatch Chile", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "2.5oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  // Turkey Jerky
+  { id: "sku-006", code: "HS24", name: "Hickory Smoke Turkey Jerky 2.5oz 24ct Shipper", flavor: "Hickory Smoke", species: "Turkey", productCategory: "Turkey Jerky", protein: "Turkey", size: "2.5oz", planner: "Sam", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 24, palletTi: 12, palletHi: 8, isActive: true },
+  // Mini Sticks
+  { id: "sku-007", code: "OBS16", name: "Original Beef Mini Sticks 16ct Bag", flavor: "Original", species: "Beef", productCategory: "Mini Sticks", protein: "Beef", size: "0.5oz", planner: "Sam", sellableUnitType: "Bag", productionUnitType: "Stick", casePack: 16, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-008", code: "BCS16", name: "Beef & Cheese Mini Sticks 16ct Bag", flavor: "Beef & Cheese", species: "Beef", productCategory: "Mini Sticks", protein: "Beef", size: "0.5oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Stick", casePack: 16, palletTi: 12, palletHi: 8, isActive: true },
+  // Full-Size Sticks
+  { id: "sku-009", code: "JBS10", name: "Jalapeno Beef Stick 1oz 10ct Box", flavor: "Jalapeno", species: "Beef", productCategory: "Sticks", protein: "Beef", size: "1oz", planner: "Sam", sellableUnitType: "Stick", productionUnitType: "Stick", casePack: 10, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-010", code: "RTS10", name: "Rosemary Turkey Stick 1oz 10ct Box", flavor: "Rosemary", species: "Turkey", productCategory: "Sticks", protein: "Turkey", size: "1oz", planner: "Sam", sellableUnitType: "Stick", productionUnitType: "Stick", casePack: 10, palletTi: 12, palletHi: 8, isActive: true },
+  // Large Format Jerky
+  { id: "sku-011", code: "OB7", name: "Original Beef Jerky 7oz Bag", flavor: "Original", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "7oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 12, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-012", code: "OB16", name: "Original Beef Jerky 16oz Bag", flavor: "Original", species: "Beef", productCategory: "Jerky", protein: "Beef", size: "16oz", planner: "Sam", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 6, palletTi: 12, palletHi: 8, isActive: true },
+  // Cowboy Cut
+  { id: "sku-013", code: "CW12", name: "Cowboy Cut Old Fashioned 2oz 12ct Shipper", flavor: "Cowboy Cut", species: "Beef", productCategory: "Cowboy Cut", protein: "Beef", size: "2oz", planner: "Alex", sellableUnitType: "Bag", productionUnitType: "Piece", casePack: 12, palletTi: 12, palletHi: 8, isActive: true },
   // Variety Packs
-  { id: "sku-014", code: "BSB10", name: "Best Sellers Variety 10ct", flavor: "Variety", species: "Plant-Based", productCategory: "Variety", protein: "Mixed", size: "Full Size", planner: "Sam", sellableUnitType: "Bar", productionUnitType: "Bar", casePack: 10, palletTi: 12, palletHi: 8, isActive: true },
+  { id: "sku-014", code: "VP12", name: "Best Sellers Variety 12ct Club Pack", flavor: "Variety", species: "Mixed", productCategory: "Variety", protein: "Mixed", size: "Mixed", planner: "Sam", sellableUnitType: "Pack", productionUnitType: "Piece", casePack: 12, palletTi: 12, palletHi: 8, isActive: true },
 ]
 
 export const coManSites: CoManSite[] = [
-  { id: "coman-001", name: "Apex Manufacturing", code: "APEX", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 8000000, capabilities: ["Original Oat", "Dark Chocolate", "Vanilla Almond", "Box Assembly"], isActive: true },
-  { id: "coman-002", name: "Summit Pack", code: "SUMMIT", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 6000000, capabilities: ["Pouch Kitting", "Club Packs", "Costco"], isActive: true },
-  { id: "coman-003", name: "Cascade Nutrition", code: "CASCADE", region: "West", address: "West, USA", capacityPerWeek: 4000000, capabilities: ["Lemon Zest", "Mixed Berry", "Pouch Assembly"], isActive: true },
-  { id: "coman-004", name: "Pinnacle Foods", code: "PINNACLE", region: "Southeast", address: "Southeast, USA", capacityPerWeek: 10000000, capabilities: ["Peanut Butter", "Vanilla Almond", "High Volume"], isActive: true },
+  { id: "coman-001", name: "San Bernardino Facility", code: "SB-MAIN", region: "West", address: "San Bernardino, CA", capacityPerWeek: 600000, capabilities: ["Jerky Slicing", "Marinating", "Drying", "Original", "Mango Habanero", "Teriyaki", "Hatch Chile", "Cowboy Cut"], isActive: true },
+  { id: "coman-002", name: "Midwest Meat Co", code: "MW-MEAT", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 450000, capabilities: ["Stick Extrusion", "Sausage Production", "Mini Sticks", "Full-Size Sticks", "High Volume"], isActive: true },
+  { id: "coman-003", name: "Pacific Jerky Works", code: "PAC-JW", region: "West", address: "West, USA", capacityPerWeek: 300000, capabilities: ["Jerky Overflow", "Cowboy Cut", "Specialty Runs", "Small Batch"], isActive: true },
+  { id: "coman-004", name: "Southeast Protein Processing", code: "SE-PROT", region: "Southeast", address: "Southeast, USA", capacityPerWeek: 350000, capabilities: ["Turkey Processing", "Turkey Jerky", "Turkey Sticks", "Mini Sticks"], isActive: true },
 ]
 
 export const kitCenters: KitCenter[] = [
-  { id: "kit-001", name: "Apex Kitting", code: "APEX-KIT", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 5000000, isActive: true },
-  { id: "kit-002", name: "Summit Kitting", code: "SUMMIT-KIT", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 4000000, isActive: true },
-  { id: "kit-003", name: "Central Kitting", code: "CENTRAL-KIT", region: "West", address: "West, USA", capacityPerWeek: 3000000, isActive: true },
+  { id: "kit-001", name: "SB Kitting", code: "SB-KIT", region: "West", address: "San Bernardino, CA", capacityPerWeek: 400000, isActive: true },
+  { id: "kit-002", name: "Midwest Kitting", code: "MW-KIT", region: "Midwest", address: "Midwest, USA", capacityPerWeek: 300000, isActive: true },
+  { id: "kit-003", name: "Central Kitting", code: "CENTRAL-KIT", region: "Central", address: "Central, USA", capacityPerWeek: 250000, isActive: true },
 ]
 
 export const shipToLocations: ShipToLocation[] = [
   // Convenience & Gas
-  { id: "ship-001", name: "EG America", code: "EG-AMERICA", customer: "Convenience", channel: "Convenience", region: "National", address: "National", transitTimeDays: 2, isActive: true },
-  { id: "ship-002", name: "Family Express", code: "FAMILY-EXP", customer: "Convenience", channel: "Convenience", region: "Midwest", address: "Midwest", transitTimeDays: 2, isActive: true },
-  { id: "ship-003", name: "Sheetz", code: "SHEETZ", customer: "Convenience", channel: "Convenience", region: "East", address: "East", transitTimeDays: 2, isActive: true },
-  // Grocery / Natural
+  { id: "ship-001", name: "7-Eleven", code: "7-ELEVEN", customer: "Convenience", channel: "Convenience", region: "National", address: "National", transitTimeDays: 2, isActive: true },
+  { id: "ship-002", name: "Circle K", code: "CIRCLE-K", customer: "Convenience", channel: "Convenience", region: "National", address: "National", transitTimeDays: 2, isActive: true },
+  { id: "ship-003", name: "Pilot/Flying J", code: "PILOT-FJ", customer: "Convenience", channel: "Convenience", region: "National", address: "National", transitTimeDays: 2, isActive: true },
+  // Grocery / Retail
   { id: "ship-004", name: "Kroger", code: "KROGER", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-005", name: "Target", code: "TARGET", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-006", name: "Target.com", code: "TARGET-COM", customer: "Grocery", channel: "Ecommerce", region: "National", address: "National", transitTimeDays: 2, isActive: true },
-  { id: "ship-007", name: "Walmart Seller", code: "WMT-SELLER", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
+  { id: "ship-007", name: "Walmart", code: "WALMART", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-008", name: "Whole Foods", code: "WFM", customer: "Natural", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-009", name: "Sprouts", code: "SPROUTS", customer: "Natural", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-010", name: "HEB", code: "HEB", customer: "Grocery", channel: "Retail", region: "Texas", address: "Texas", transitTimeDays: 3, isActive: true },
-  { id: "ship-011", name: "Hy-Vee", code: "HYVEE", customer: "Grocery", channel: "Retail", region: "Midwest", address: "Midwest", transitTimeDays: 3, isActive: true },
-  { id: "ship-012", name: "Trader Joe's", code: "TJS", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
+  { id: "ship-011", name: "Albertsons/Safeway", code: "ABS-SWY", customer: "Grocery", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
+  { id: "ship-012", name: "Natural Grocers", code: "NAT-GROC", customer: "Natural", channel: "Retail", region: "West", address: "West", transitTimeDays: 3, isActive: true },
   // Club
   { id: "ship-013", name: "Costco", code: "COSTCO", customer: "Club", channel: "Club", region: "National", address: "National", transitTimeDays: 3, isActive: true },
   { id: "ship-014", name: "Sam's Club", code: "SAMS", customer: "Club", channel: "Club", region: "National", address: "National", transitTimeDays: 3, isActive: true },
@@ -149,21 +150,25 @@ export const shipToLocations: ShipToLocation[] = [
   { id: "ship-020", name: "Shopify D2C", code: "SHOPIFY-D2C", customer: "DTC", channel: "Ecommerce", region: "National", address: "National", transitTimeDays: 2, isActive: true },
   { id: "ship-021", name: "Amazon", code: "AMAZON", customer: "Ecommerce", channel: "Ecommerce", region: "National", address: "National", transitTimeDays: 2, isActive: true },
   { id: "ship-022", name: "Amazon Fresh", code: "AMAZON-FRESH", customer: "Ecommerce", channel: "Ecommerce", region: "National", address: "National", transitTimeDays: 2, isActive: true },
-  { id: "ship-023", name: "Thrive Market", code: "THRIVE", customer: "Ecommerce", channel: "Ecommerce", region: "National", address: "National", transitTimeDays: 2, isActive: true },
+  { id: "ship-023", name: "Hudson News", code: "HUDSON", customer: "Travel", channel: "Retail", region: "National", address: "National", transitTimeDays: 3, isActive: true },
 ]
 
 export const suppliers: Supplier[] = [
-  { id: "sup-001", name: "Harvest Grain Co", code: "GRAIN-HG", materialCategories: ["Oat Base", "Grain Blends"], leadTimeDays: 14, minOrderQty: 50000, orderMultiple: 5000, contactEmail: "orders@harvestgraingo.com", isActive: true },
-  { id: "sup-002", name: "Pure Blends Inc", code: "BLEND-PB", materialCategories: ["Protein Blends", "Flavor Mixes"], leadTimeDays: 10, minOrderQty: 5000, orderMultiple: 1000, contactEmail: "orders@pureblendsinc.com", isActive: true },
-  { id: "sup-003", name: "GreenPack Solutions", code: "PKG-GP", materialCategories: ["Boxes", "Pouches", "Shippers"], leadTimeDays: 12, minOrderQty: 10000, orderMultiple: 5000, contactEmail: "orders@greenpacksolutions.com", isActive: true },
+  { id: "sup-001", name: "Premium Beef Supply", code: "BEEF-PBS", materialCategories: ["Grass-Fed Beef", "Beef Trim"], leadTimeDays: 7, minOrderQty: 20000, orderMultiple: 5000, contactEmail: "orders@premiumbeef.com", isActive: true },
+  { id: "sup-002", name: "Heritage Turkey Farms", code: "TURK-HTF", materialCategories: ["All-Natural Turkey", "Turkey Breast"], leadTimeDays: 10, minOrderQty: 10000, orderMultiple: 2500, contactEmail: "orders@heritageturkey.com", isActive: true },
+  { id: "sup-003", name: "Spice & Marinade Co", code: "SPICE-SM", materialCategories: ["Marinades", "Seasoning Blends", "Spice Mixes"], leadTimeDays: 14, minOrderQty: 5000, orderMultiple: 1000, contactEmail: "orders@spicemarinade.com", isActive: true },
+  { id: "sup-004", name: "FlexPak Solutions", code: "PKG-FP", materialCategories: ["Bags", "Pouches", "Shippers", "Boxes"], leadTimeDays: 12, minOrderQty: 10000, orderMultiple: 5000, contactEmail: "orders@flexpaksolutions.com", isActive: true },
 ]
 
 export const materials: Material[] = [
-  { id: "mat-001", name: "Organic Oat Base", code: "OAT-BASE", category: "Grain Bases", supplierUnit: "lbs", yieldPerThousandSticks: 72, suppliers: ["sup-001"], isActive: true },
-  { id: "mat-002", name: "Plant Protein Blend", code: "PROT-BLEND", category: "Protein Blends", supplierUnit: "lbs", yieldPerThousandSticks: 3, suppliers: ["sup-002"], isActive: true },
-  { id: "mat-003", name: "Biodegradable Film Wrap", code: "WRAP-BIO", category: "Packaging", supplierUnit: "units", yieldPerThousandSticks: 1000, suppliers: ["sup-003"], isActive: true },
-  { id: "mat-004", name: "24ct Display Box", code: "BOX-24CT", category: "Packaging", supplierUnit: "units", yieldPerThousandSticks: 42, suppliers: ["sup-003"], isActive: true },
-  { id: "mat-005", name: "Foil Wrapper", code: "WRAP-FOIL", category: "Packaging", supplierUnit: "units", yieldPerThousandSticks: 1000, suppliers: ["sup-003"], isActive: true },
+  { id: "mat-001", name: "Grass-Fed Beef", code: "BEEF-GF", category: "Raw Protein", supplierUnit: "lbs", yieldPerThousandSticks: 120, suppliers: ["sup-001"], isActive: true },
+  { id: "mat-002", name: "All-Natural Turkey", code: "TURK-AN", category: "Raw Protein", supplierUnit: "lbs", yieldPerThousandSticks: 95, suppliers: ["sup-002"], isActive: true },
+  { id: "mat-003", name: "Original Marinade Blend", code: "MAR-ORIG", category: "Marinades", supplierUnit: "lbs", yieldPerThousandSticks: 18, suppliers: ["sup-003"], isActive: true },
+  { id: "mat-004", name: "Teriyaki Marinade", code: "MAR-TERI", category: "Marinades", supplierUnit: "lbs", yieldPerThousandSticks: 20, suppliers: ["sup-003"], isActive: true },
+  { id: "mat-005", name: "Mango Habanero Seasoning", code: "SEA-MHAB", category: "Seasonings", supplierUnit: "lbs", yieldPerThousandSticks: 12, suppliers: ["sup-003"], isActive: true },
+  { id: "mat-006", name: "Collagen Casings", code: "CAS-COL", category: "Casings", supplierUnit: "units", yieldPerThousandSticks: 1000, suppliers: ["sup-004"], isActive: true },
+  { id: "mat-007", name: "2.5oz Resealable Bag", code: "BAG-2.5", category: "Packaging", supplierUnit: "units", yieldPerThousandSticks: 1000, suppliers: ["sup-004"], isActive: true },
+  { id: "mat-008", name: "24ct Shipper Box", code: "BOX-24CT", category: "Packaging", supplierUnit: "units", yieldPerThousandSticks: 42, suppliers: ["sup-004"], isActive: true },
 ]
 
 // ============================================================================
@@ -178,178 +183,178 @@ export const planningDateRange = {
 }
 
 export const productionSKUData: Record<string, { initialStartingInventory: number; productionPlanned: number[]; kittingDemand: number[]; targetWOS: number[] }> = {
-  "CO24": {
-    initialStartingInventory: 758000,
-    productionPlanned: [505000, 565000, 515000, 825000, 123000, 384000, 300000, 249000, 427000, 638000, 576000, 376000, 526000, 476000, 490000, 510000],
-    kittingDemand: [418000, 624000, 1088000, 833000, 1038000, 891000, 1110000, 827000, 758000, 833000, 734000, 608000, 515000, 514000, 530000, 520000],
+  "OB24": {
+    initialStartingInventory: 520000,
+    productionPlanned: [348000, 390000, 355000, 568000, 85000, 264000, 207000, 172000, 294000, 440000, 397000, 259000, 362000, 328000, 338000, 352000],
+    kittingDemand: [288000, 430000, 750000, 574000, 715000, 614000, 765000, 570000, 522000, 574000, 506000, 419000, 355000, 354000, 365000, 358000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
   },
-  "CJ24": {
-    initialStartingInventory: 569000,
-    productionPlanned: [378000, 420000, 390000, 640000, 96000, 290000, 236000, 196000, 324000, 480000, 430000, 284000, 396000, 358000, 370000, 385000],
-    kittingDemand: [316000, 470000, 820000, 630000, 784000, 672000, 838000, 624000, 572000, 628000, 554000, 458000, 388000, 388000, 400000, 395000],
+  "MH24": {
+    initialStartingInventory: 392000,
+    productionPlanned: [260000, 290000, 269000, 441000, 66000, 200000, 163000, 135000, 223000, 331000, 296000, 196000, 273000, 247000, 255000, 266000],
+    kittingDemand: [218000, 324000, 565000, 434000, 540000, 463000, 578000, 430000, 394000, 433000, 382000, 316000, 267000, 267000, 276000, 272000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
   },
-  "CB24": {
-    initialStartingInventory: 443000,
-    productionPlanned: [294000, 328000, 304000, 498000, 75000, 226000, 184000, 153000, 252000, 374000, 336000, 222000, 308000, 280000, 295000, 305000],
-    kittingDemand: [246000, 366000, 640000, 492000, 612000, 524000, 654000, 486000, 446000, 490000, 432000, 358000, 304000, 302000, 315000, 310000],
+  "TK24": {
+    initialStartingInventory: 305000,
+    productionPlanned: [203000, 226000, 210000, 343000, 52000, 156000, 127000, 106000, 174000, 258000, 232000, 153000, 212000, 193000, 203000, 211000],
+    kittingDemand: [170000, 252000, 441000, 339000, 422000, 361000, 451000, 335000, 308000, 338000, 298000, 247000, 210000, 208000, 217000, 214000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
   },
-  "CTOTJ24": {
-    initialStartingInventory: 378400,
-    productionPlanned: [252000, 280000, 260000, 426000, 64000, 194000, 158000, 131000, 216000, 320000, 288000, 190000, 264000, 240000, 255000, 265000],
-    kittingDemand: [210000, 314000, 548000, 420000, 524000, 448000, 560000, 416000, 382000, 420000, 370000, 306000, 260000, 258000, 270000, 265000],
+  "HC24": {
+    initialStartingInventory: 261000,
+    productionPlanned: [174000, 193000, 179000, 294000, 44000, 134000, 109000, 90000, 149000, 221000, 198000, 131000, 182000, 165000, 176000, 183000],
+    kittingDemand: [145000, 217000, 378000, 290000, 361000, 309000, 386000, 287000, 264000, 290000, 255000, 211000, 179000, 178000, 186000, 183000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
   },
-  "COP12": {
-    initialStartingInventory: 313600,
-    productionPlanned: [208000, 232000, 216000, 352000, 53000, 160000, 130000, 108000, 178000, 264000, 238000, 157000, 218000, 198000, 210000, 220000],
-    kittingDemand: [174000, 260000, 454000, 348000, 434000, 372000, 464000, 344000, 316000, 348000, 306000, 254000, 216000, 214000, 225000, 220000],
+  "VP12": {
+    initialStartingInventory: 216000,
+    productionPlanned: [143000, 160000, 149000, 243000, 37000, 110000, 90000, 74000, 123000, 182000, 164000, 108000, 150000, 137000, 145000, 152000],
+    kittingDemand: [120000, 179000, 313000, 240000, 299000, 256000, 320000, 237000, 218000, 240000, 211000, 175000, 149000, 147000, 155000, 152000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
   },
 }
 
 export const coManProductionData: Record<string, Record<string, { capacity: number[]; planned: number[]; overrides: (number | null)[] }>> = {
-  "Apex Manufacturing": {
-    "CO24": {
-      capacity: [600000, 640000, 620000, 900000, 300000, 500000, 400000, 360000, 560000, 700000, 640000, 500000, 600000, 560000, 580000, 600000],
-      planned: [303000, 339000, 309000, 495000, 74000, 230000, 180000, 150000, 256000, 383000, 346000, 226000, 316000, 286000, 295000, 305000],
+  "San Bernardino Facility": {
+    "OB24": {
+      capacity: [420000, 448000, 434000, 630000, 210000, 350000, 280000, 252000, 392000, 490000, 448000, 350000, 420000, 392000, 406000, 420000],
+      planned: [209000, 234000, 213000, 341000, 51000, 158000, 124000, 103000, 176000, 264000, 238000, 155000, 217000, 197000, 203000, 211000],
       overrides: Array(16).fill(null),
     },
-    "CJ24": {
-      capacity: [500000, 540000, 520000, 760000, 240000, 420000, 340000, 300000, 480000, 600000, 540000, 420000, 500000, 460000, 480000, 500000],
-      planned: [227000, 252000, 234000, 384000, 58000, 174000, 142000, 118000, 194000, 288000, 258000, 170000, 238000, 215000, 222000, 231000],
-      overrides: Array(16).fill(null),
-    },
-  },
-  "Pinnacle Foods": {
-    "CB24": {
-      capacity: [360000, 400000, 380000, 560000, 180000, 300000, 240000, 220000, 340000, 420000, 380000, 300000, 360000, 340000, 350000, 360000],
-      planned: [152000, 169000, 155000, 248000, 37000, 115000, 90000, 75000, 128000, 191000, 173000, 113000, 158000, 143000, 148000, 153000],
-      overrides: Array(16).fill(null),
-    },
-    "CTOTJ24": {
-      capacity: [300000, 340000, 320000, 480000, 150000, 260000, 210000, 190000, 300000, 370000, 330000, 260000, 300000, 280000, 290000, 300000],
-      planned: [113000, 126000, 117000, 192000, 29000, 87000, 71000, 59000, 97000, 144000, 129000, 85000, 119000, 107000, 113000, 118000],
+    "MH24": {
+      capacity: [350000, 378000, 364000, 532000, 168000, 294000, 238000, 210000, 336000, 420000, 378000, 294000, 350000, 322000, 336000, 350000],
+      planned: [156000, 174000, 161000, 265000, 40000, 120000, 98000, 81000, 134000, 199000, 178000, 118000, 164000, 148000, 153000, 160000],
       overrides: Array(16).fill(null),
     },
   },
-  "Cascade Nutrition": {
-    "COP12": {
-      capacity: [240000, 280000, 260000, 360000, 120000, 200000, 160000, 140000, 220000, 280000, 260000, 200000, 240000, 220000, 230000, 240000],
-      planned: [51000, 56000, 52000, 83000, 12000, 38000, 30000, 25000, 43000, 64000, 58000, 38000, 53000, 48000, 50000, 52000],
+  "Midwest Meat Co": {
+    "TK24": {
+      capacity: [252000, 280000, 266000, 392000, 126000, 210000, 168000, 154000, 238000, 294000, 266000, 210000, 252000, 238000, 245000, 252000],
+      planned: [105000, 117000, 107000, 171000, 26000, 79000, 62000, 52000, 88000, 132000, 119000, 78000, 109000, 99000, 103000, 107000],
+      overrides: Array(16).fill(null),
+    },
+    "HC24": {
+      capacity: [210000, 238000, 224000, 336000, 105000, 182000, 147000, 133000, 210000, 259000, 231000, 182000, 210000, 196000, 203000, 210000],
+      planned: [78000, 87000, 81000, 132000, 20000, 60000, 49000, 41000, 67000, 99000, 89000, 59000, 82000, 74000, 78000, 82000],
+      overrides: Array(16).fill(null),
+    },
+  },
+  "Pacific Jerky Works": {
+    "VP12": {
+      capacity: [168000, 196000, 182000, 252000, 84000, 140000, 112000, 98000, 154000, 196000, 182000, 140000, 168000, 154000, 161000, 168000],
+      planned: [35000, 39000, 36000, 57000, 9000, 26000, 21000, 17000, 30000, 44000, 40000, 26000, 37000, 33000, 35000, 36000],
       overrides: Array(16).fill(null),
     },
   },
 }
 
-export const coManPartners = ["Apex Manufacturing", "Pinnacle Foods", "Cascade Nutrition"]
+export const coManPartners = ["San Bernardino Facility", "Midwest Meat Co", "Pacific Jerky Works"]
 
 export const kittingPlanData = [
   {
-    sku: "CO24",
-    initialBulkInventory: 700000,
-    kittingDemand: [418000, 624000, 1088000, 833000, 1038000, 891000, 1110000, 827000, 758000, 833000, 734000, 608000, 515000, 514000, 530000, 520000],
+    sku: "OB24",
+    initialBulkInventory: 480000,
+    kittingDemand: [288000, 430000, 750000, 574000, 715000, 614000, 765000, 570000, 522000, 574000, 506000, 419000, 355000, 354000, 365000, 358000],
     targetWOS: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
     kitCenters: [
-      { name: "Apex Kitting", weeklyCapacity: Array(16).fill(900000), weeklyPlanned: [360000, 440000, 760000, 580000, 720000, 620000, 780000, 580000, 540000, 580000, 520000, 420000, 360000, 360000, 370000, 365000] },
-      { name: "Central Kitting", weeklyCapacity: Array(16).fill(600000), weeklyPlanned: [58000, 184000, 328000, 253000, 318000, 271000, 330000, 247000, 218000, 253000, 214000, 188000, 155000, 154000, 160000, 155000] },
+      { name: "SB Kitting", weeklyCapacity: Array(16).fill(620000), weeklyPlanned: [248000, 303000, 524000, 400000, 496000, 428000, 538000, 400000, 372000, 400000, 358000, 290000, 248000, 248000, 255000, 252000] },
+      { name: "Central Kitting", weeklyCapacity: Array(16).fill(420000), weeklyPlanned: [40000, 127000, 226000, 174000, 219000, 186000, 227000, 170000, 150000, 174000, 148000, 129000, 107000, 106000, 110000, 106000] },
     ],
   },
   {
-    sku: "CJ24",
-    initialBulkInventory: 560000,
-    kittingDemand: [350000, 420000, 570000, 480000, 590000, 520000, 620000, 500000, 460000, 510000, 480000, 420000, 380000, 370000, 385000, 378000],
+    sku: "MH24",
+    initialBulkInventory: 386000,
+    kittingDemand: [241000, 290000, 393000, 331000, 407000, 358000, 427000, 345000, 317000, 352000, 331000, 290000, 262000, 255000, 266000, 261000],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     kitCenters: [
-      { name: "Apex Kitting", weeklyCapacity: Array(16).fill(700000), weeklyPlanned: [240000, 290000, 390000, 330000, 400000, 360000, 420000, 340000, 320000, 350000, 330000, 290000, 260000, 250000, 260000, 255000] },
-      { name: "Summit Kitting", weeklyCapacity: Array(16).fill(400000), weeklyPlanned: [110000, 130000, 180000, 150000, 190000, 160000, 200000, 160000, 140000, 160000, 150000, 130000, 120000, 120000, 125000, 123000] },
+      { name: "SB Kitting", weeklyCapacity: Array(16).fill(480000), weeklyPlanned: [165000, 200000, 269000, 228000, 276000, 248000, 290000, 234000, 221000, 241000, 228000, 200000, 179000, 173000, 179000, 176000] },
+      { name: "Midwest Kitting", weeklyCapacity: Array(16).fill(280000), weeklyPlanned: [76000, 90000, 124000, 103000, 131000, 110000, 137000, 111000, 96000, 111000, 103000, 90000, 83000, 82000, 87000, 85000] },
     ],
   },
   {
-    sku: "CB24",
-    initialBulkInventory: 440000,
-    kittingDemand: [280000, 336000, 456000, 384000, 472000, 416000, 496000, 400000, 368000, 408000, 384000, 336000, 304000, 296000, 310000, 305000],
+    sku: "TK24",
+    initialBulkInventory: 303000,
+    kittingDemand: [193000, 232000, 314000, 265000, 325000, 287000, 342000, 276000, 254000, 281000, 265000, 232000, 210000, 204000, 214000, 210000],
     targetWOS: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     kitCenters: [
-      { name: "Central Kitting", weeklyCapacity: Array(16).fill(500000), weeklyPlanned: [180000, 216000, 292000, 246000, 302000, 266000, 318000, 256000, 236000, 262000, 246000, 216000, 196000, 190000, 198000, 195000] },
-      { name: "Summit Kitting", weeklyCapacity: Array(16).fill(300000), weeklyPlanned: [100000, 120000, 164000, 138000, 170000, 150000, 178000, 144000, 132000, 146000, 138000, 120000, 108000, 106000, 112000, 110000] },
+      { name: "Central Kitting", weeklyCapacity: Array(16).fill(350000), weeklyPlanned: [124000, 149000, 201000, 170000, 208000, 184000, 219000, 177000, 163000, 180000, 170000, 149000, 135000, 131000, 137000, 135000] },
+      { name: "Midwest Kitting", weeklyCapacity: Array(16).fill(210000), weeklyPlanned: [69000, 83000, 113000, 95000, 117000, 103000, 123000, 99000, 91000, 101000, 95000, 83000, 75000, 73000, 77000, 75000] },
     ],
   },
 ]
 
 export const materialsPlanData = [
   {
-    material: "Organic Oat Base",
+    material: "Grass-Fed Beef",
     canonicalUnit: "lbs",
     coManConsumption: [
-      { coMan: "Apex Manufacturing", materialRequirement: [104000, 100000, 108000, 106000, 102000, 104000, 110000, 106000, 100000, 106000, 108000, 104000, 102000, 106000, 104000, 108000] },
-      { coMan: "Pinnacle Foods", materialRequirement: [96000, 92000, 100000, 98000, 94000, 96000, 102000, 98000, 92000, 98000, 100000, 96000, 94000, 98000, 96000, 100000] },
-      { coMan: "Cascade Nutrition", materialRequirement: [70000, 68000, 74000, 72000, 70000, 70000, 76000, 72000, 68000, 72000, 74000, 70000, 70000, 72000, 70000, 74000] },
+      { coMan: "San Bernardino Facility", materialRequirement: [84000, 81000, 87000, 86000, 82000, 84000, 89000, 86000, 81000, 86000, 87000, 84000, 82000, 86000, 84000, 87000] },
+      { coMan: "Midwest Meat Co", materialRequirement: [72000, 69000, 75000, 74000, 71000, 72000, 77000, 74000, 69000, 74000, 75000, 72000, 71000, 74000, 72000, 75000] },
+      { coMan: "Pacific Jerky Works", materialRequirement: [48000, 46000, 50000, 49000, 47000, 48000, 52000, 49000, 46000, 49000, 50000, 48000, 47000, 49000, 48000, 50000] },
     ],
     suppliers: [
-      { name: "Harvest Grain Co", coMansServed: ["Apex Manufacturing", "Pinnacle Foods"], materialRequirement: [200000, 192000, 208000, 204000, 196000, 200000, 212000, 204000, 192000, 204000, 208000, 200000, 196000, 204000, 200000, 208000], yieldFactor: 0.98 },
+      { name: "Premium Beef Supply", coMansServed: ["San Bernardino Facility", "Midwest Meat Co", "Pacific Jerky Works"], materialRequirement: [204000, 196000, 212000, 209000, 200000, 204000, 218000, 209000, 196000, 209000, 212000, 204000, 200000, 209000, 204000, 212000], yieldFactor: 0.92 },
     ],
-    onHandInventory: [360000, 350000, 340000, 336000, 330000, 320000, 316000, 310000, 304000, 300000, 296000, 290000, 286000, 280000, 276000, 270000],
-    inboundMaterial: [190000, 184000, 196000, 192000, 188000, 190000, 200000, 194000, 186000, 192000, 196000, 190000, 188000, 192000, 190000, 194000],
-    plannedSupply: [300000, 290000, 310000, 304000, 296000, 300000, 316000, 308000, 292000, 304000, 310000, 300000, 296000, 304000, 300000, 308000],
+    onHandInventory: [280000, 272000, 264000, 260000, 256000, 248000, 244000, 240000, 236000, 232000, 228000, 224000, 220000, 216000, 212000, 208000],
+    inboundMaterial: [160000, 154000, 166000, 163000, 158000, 160000, 170000, 164000, 156000, 163000, 166000, 160000, 158000, 163000, 160000, 164000],
+    plannedSupply: [240000, 232000, 248000, 244000, 236000, 240000, 254000, 246000, 234000, 244000, 248000, 240000, 236000, 244000, 240000, 246000],
   },
   {
-    material: "Plant Protein Blend",
+    material: "All-Natural Turkey",
     canonicalUnit: "lbs",
     coManConsumption: [
-      { coMan: "Apex Manufacturing", materialRequirement: [5600, 5400, 6000, 5800, 5600, 5600, 6200, 5800, 5400, 5800, 6000, 5600, 5600, 5800, 5600, 6000] },
-      { coMan: "Pinnacle Foods", materialRequirement: [4800, 4600, 5000, 4800, 4600, 4800, 5000, 5000, 4600, 4800, 5000, 4800, 4600, 4800, 4800, 4800] },
+      { coMan: "Southeast Protein Processing", materialRequirement: [4200, 4000, 4500, 4400, 4200, 4200, 4700, 4400, 4000, 4400, 4500, 4200, 4200, 4400, 4200, 4500] },
     ],
     suppliers: [
-      { name: "Pure Blends Inc", coMansServed: ["Apex Manufacturing", "Pinnacle Foods"], materialRequirement: [10400, 10000, 11000, 10600, 10200, 10400, 11200, 10800, 10000, 10600, 11000, 10400, 10200, 10600, 10400, 10800], yieldFactor: 0.96 },
+      { name: "Heritage Turkey Farms", coMansServed: ["Southeast Protein Processing"], materialRequirement: [4200, 4000, 4500, 4400, 4200, 4200, 4700, 4400, 4000, 4400, 4500, 4200, 4200, 4400, 4200, 4500], yieldFactor: 0.94 },
     ],
-    onHandInventory: [13600, 13000, 12400, 12000, 11600, 11000, 10400, 10000, 9600, 9000, 8400, 8000, 7600, 7000, 6400, 6000],
-    inboundMaterial: [8400, 8000, 8800, 8600, 8200, 8400, 9000, 8600, 8000, 8600, 8800, 8400, 8200, 8600, 8400, 8600],
-    plannedSupply: [11000, 10600, 11600, 11200, 10800, 11000, 12000, 11400, 10600, 11200, 11600, 11000, 10800, 11200, 11000, 11400],
+    onHandInventory: [10200, 9800, 9400, 9100, 8800, 8400, 8000, 7600, 7300, 6900, 6500, 6100, 5800, 5400, 5000, 4600],
+    inboundMaterial: [3400, 3200, 3600, 3500, 3400, 3400, 3800, 3500, 3200, 3500, 3600, 3400, 3400, 3500, 3400, 3600],
+    plannedSupply: [4600, 4400, 4900, 4700, 4500, 4600, 5100, 4800, 4400, 4700, 4900, 4600, 4500, 4700, 4600, 4800],
   },
 ]
 
 export const allocationPlanData = [
   {
-    sku: "CO24",
-    startingNetworkInventory: 490000,
-    inboundFG: [64000, 62000, 68000, 65000, 63000, 66000, 69000, 64000, 62000, 68000, 65000, 63000, 66000, 69000, 64000, 62000],
+    sku: "OB24",
+    startingNetworkInventory: 338000,
+    inboundFG: [44000, 43000, 47000, 45000, 43000, 46000, 48000, 44000, 43000, 47000, 45000, 43000, 46000, 48000, 44000, 43000],
     warehouses: [
-      { name: "Costco", allocationPlanned: [25000, 24000, 26000, 25000, 23600, 25600, 27000, 25000, 24000, 26000, 25000, 23600, 25600, 27000, 25000, 24000], shipmentDemand: [23000, 23600, 24400, 23800, 24200, 25000, 25600, 23000, 23600, 24400, 23800, 24200, 25000, 25600, 23000, 23600], startingInventory: 170000, targetWOS: 6.0 },
-      { name: "Target", allocationPlanned: [19000, 18400, 20000, 19200, 18000, 19600, 21000, 19000, 18400, 20000, 19200, 18000, 19600, 21000, 19000, 18400], shipmentDemand: [17600, 18200, 18800, 18000, 18400, 19200, 19800, 17600, 18200, 18800, 18000, 18400, 19200, 19800, 17600, 18200], startingInventory: 144000, targetWOS: 6.0 },
-      { name: "Whole Foods", allocationPlanned: [13000, 13600, 14000, 13400, 12800, 13800, 14400, 13000, 13600, 14000, 13400, 12800, 13800, 14400, 13000, 13600], shipmentDemand: [12000, 12400, 13000, 12600, 12200, 12800, 13400, 12000, 12400, 13000, 12600, 12200, 12800, 13400, 12000, 12400], startingInventory: 96000, targetWOS: 5.5 },
+      { name: "Costco", allocationPlanned: [17000, 17000, 18000, 17000, 16000, 18000, 19000, 17000, 17000, 18000, 17000, 16000, 18000, 19000, 17000, 17000], shipmentDemand: [16000, 16000, 17000, 16000, 17000, 17000, 18000, 16000, 16000, 17000, 16000, 17000, 17000, 18000, 16000, 16000], startingInventory: 117000, targetWOS: 6.0 },
+      { name: "Target", allocationPlanned: [13000, 13000, 14000, 13000, 12000, 14000, 14000, 13000, 13000, 14000, 13000, 12000, 14000, 14000, 13000, 13000], shipmentDemand: [12000, 13000, 13000, 12000, 13000, 13000, 14000, 12000, 13000, 13000, 12000, 13000, 13000, 14000, 12000, 13000], startingInventory: 99000, targetWOS: 6.0 },
+      { name: "Whole Foods", allocationPlanned: [9000, 9000, 10000, 9000, 9000, 10000, 10000, 9000, 9000, 10000, 9000, 9000, 10000, 10000, 9000, 9000], shipmentDemand: [8000, 9000, 9000, 9000, 8000, 9000, 9000, 8000, 9000, 9000, 9000, 8000, 9000, 9000, 8000, 9000], startingInventory: 66000, targetWOS: 5.5 },
     ],
   },
   {
-    sku: "CB24",
-    startingNetworkInventory: 370000,
-    inboundFG: [56000, 55000, 58000, 57000, 54000, 57000, 59000, 56000, 55000, 58000, 57000, 54000, 57000, 59000, 56000, 55000],
+    sku: "TK24",
+    startingNetworkInventory: 255000,
+    inboundFG: [39000, 38000, 40000, 39000, 37000, 39000, 41000, 39000, 38000, 40000, 39000, 37000, 39000, 41000, 39000, 38000],
     warehouses: [
-      { name: "Costco", allocationPlanned: [22000, 21000, 23000, 22000, 20400, 22400, 23600, 22000, 21000, 23000, 22000, 20400, 22400, 23600, 22000, 21000], shipmentDemand: [20000, 20600, 21400, 20800, 21200, 21800, 22400, 20000, 20600, 21400, 20800, 21200, 21800, 22400, 20000, 20600], startingInventory: 136000, targetWOS: 5.5 },
-      { name: "Target", allocationPlanned: [17000, 16400, 18000, 17200, 16000, 17600, 18400, 17000, 16400, 18000, 17200, 16000, 17600, 18400, 17000, 16400], shipmentDemand: [15600, 16000, 16600, 16200, 16400, 17000, 17400, 15600, 16000, 16600, 16200, 16400, 17000, 17400, 15600, 16000], startingInventory: 110000, targetWOS: 5.5 },
+      { name: "Costco", allocationPlanned: [15000, 14000, 16000, 15000, 14000, 15000, 16000, 15000, 14000, 16000, 15000, 14000, 15000, 16000, 15000, 14000], shipmentDemand: [14000, 14000, 15000, 14000, 15000, 15000, 15000, 14000, 14000, 15000, 14000, 15000, 15000, 15000, 14000, 14000], startingInventory: 94000, targetWOS: 5.5 },
+      { name: "Target", allocationPlanned: [12000, 11000, 12000, 12000, 11000, 12000, 13000, 12000, 11000, 12000, 12000, 11000, 12000, 13000, 12000, 11000], shipmentDemand: [11000, 11000, 12000, 11000, 11000, 12000, 12000, 11000, 11000, 12000, 11000, 11000, 12000, 12000, 11000, 11000], startingInventory: 76000, targetWOS: 5.5 },
     ],
   },
 ]
 
-export const COMAN_SITES = ["Apex Manufacturing", "Pinnacle Foods", "Cascade Nutrition"]
+export const COMAN_SITES = ["San Bernardino Facility", "Midwest Meat Co", "Pacific Jerky Works"]
 
 // Consumption Plan - Retailer SKU Mapping
 export const retailerSkuMapping: Record<string, Array<{ sku: string; name: string }>> = {
   Target: [
-    { sku: "CO24", name: "Original Oat Bar 24ct Box" },
-    { sku: "CJ24", name: "Dark Chocolate Bar 24ct Box" },
-    { sku: "CB24", name: "Peanut Butter Bar 24ct Box" },
+    { sku: "OB24", name: "Original Beef Jerky 2.5oz 24ct Shipper" },
+    { sku: "MH24", name: "Mango Habanero Jerky 2.5oz 24ct Shipper" },
+    { sku: "HC24", name: "Hatch Chile Jerky 2.5oz 24ct Shipper" },
   ],
   Walmart: [
-    { sku: "CO24", name: "Original Oat Bar 24ct Box" },
-    { sku: "CJ24", name: "Dark Chocolate Bar 24ct Box" },
-    { sku: "CTOTJ24", name: "Vanilla Almond Bar 24ct Box" },
+    { sku: "OB24", name: "Original Beef Jerky 2.5oz 24ct Shipper" },
+    { sku: "MH24", name: "Mango Habanero Jerky 2.5oz 24ct Shipper" },
+    { sku: "TK24", name: "Teriyaki Jerky 2.5oz 24ct Shipper" },
+    { sku: "OBS16", name: "Original Beef Mini Sticks 16ct Bag" },
   ],
   Costco: [
-    { sku: "COP12", name: "Original Oat Bar 12ct Club Pouch" },
-    { sku: "CTOTJP12", name: "Vanilla Almond Bar 12ct Club Pouch" },
+    { sku: "VP12", name: "Best Sellers Variety 12ct Club Pack" },
+    { sku: "OB16", name: "Original Beef Jerky 16oz Bag" },
   ],
 }
 

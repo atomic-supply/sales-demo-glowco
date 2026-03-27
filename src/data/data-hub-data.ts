@@ -117,7 +117,7 @@ export const dynamicDataSourceGroups: DataSourceGroup[] = [
     id: "netsuite", name: "Netsuite",
     sources: [
       createDS("ns-kitting-po", "Kitting POs", "Kitting purchase orders", "NetSuite", "Snowflake", "API", "Today, 08:15 AM", today(8,15), 1440, "1,860", { hasNonBlockingErrors: true, issue: "2 POs reference SKUs without forecast", issues: [
-        { id: "kpo-1", severity: "error", description: "PO #KIT-4521 references SKU 'VZBAR-01' which has no demand forecast in the model", affectedRecords: 1, example: "KIT-4521: VZBAR-01 x 5,000 bars to Apex Kitting" },
+        { id: "kpo-1", severity: "error", description: "PO #KIT-4521 references SKU 'VZBAR-01' which has no demand forecast in the model", affectedRecords: 1, example: "KIT-4521: VZBAR-01 x 5,000 bars to SB Kitting" },
         { id: "kpo-2", severity: "error", description: "PO #KIT-4530 references location 'Summit-Test' not in SKU mapping static data", affectedRecords: 1, example: "KIT-4530: CB24 x 12,000 bars to Summit-Test" },
       ]}),
       createDS("ns-material-po", "Material POs", "Raw material purchase orders", "NetSuite", "Snowflake", "API", "Today, 08:15 AM", today(8,15), 1440, "3,240"),
@@ -144,16 +144,16 @@ export const dynamicDataSourceGroups: DataSourceGroup[] = [
   {
     id: "kitting-inventory", name: "Kitting Inventory",
     sources: [
-      createDS("inv-summit-kit", "Summit Kitting Inventory", "Summit kitting facility on-hand", "Summit Pack", "Manual Upload", "Manual", "Today, 07:15 AM", today(7,15), 1440, "12,340", { uploadedFileName: "Summit_Inventory_01_27_26.xlsx" }),
-      createDS("inv-apex-kit", "Apex Kitting Inventory", "Apex kitting facility on-hand", "Apex Manufacturing", "Manual Upload", "Manual", "Today, 07:30 AM", today(7,30), 1440, "18,560", { uploadedFileName: "Apex_Inventory_01_27_26.xlsx" }),
+      createDS("inv-summit-kit", "Midwest Kitting Inventory", "Summit kitting facility on-hand", "Summit Pack", "Manual Upload", "Manual", "Today, 07:15 AM", today(7,15), 1440, "12,340", { uploadedFileName: "Summit_Inventory_01_27_26.xlsx" }),
+      createDS("inv-apex-kit", "SB Kitting Inventory", "Apex kitting facility on-hand", "San Bernardino Facility", "Manual Upload", "Manual", "Today, 07:30 AM", today(7,30), 1440, "18,560", { uploadedFileName: "Apex_Inventory_01_27_26.xlsx" }),
     ],
   },
   {
     id: "production-inventory", name: "Production Inventory",
     sources: [
-      createDS("inv-apex-mfg", "Apex Manufacturing Inventory", "Apex Manufacturing production inventory", "Apex Manufacturing", "Manual Upload", "Manual", "Today, 11:40 AM", today(11,40), 10080, "8,900", { uploadedFileName: "Apex_Inventory_W04_2026.xlsx" }),
-      createDS("inv-pinnacle", "Pinnacle Foods Inventory", "Pinnacle Foods production inventory", "Pinnacle Foods", "Manual Upload", "Manual", "Today, 10:15 AM", today(10,15), 10080, "14,200", { uploadedFileName: "Pinnacle_Inventory_01_27.xlsx" }),
-      createDS("inv-cascade", "Cascade Nutrition Inventory", "Cascade Nutrition production inventory", "Cascade Nutrition", "Manual Upload", "Manual", "Today, 09:30 AM", today(9,30), 10080, "6,780", { uploadedFileName: "Cascade_Inventory_2026W04.xlsx", hasNonBlockingErrors: true, issue: "1 SKU in inventory not found in SKU master", issues: [
+      createDS("inv-apex-mfg", "San Bernardino Facility Inventory", "San Bernardino Facility production inventory", "San Bernardino Facility", "Manual Upload", "Manual", "Today, 11:40 AM", today(11,40), 10080, "8,900", { uploadedFileName: "Apex_Inventory_W04_2026.xlsx" }),
+      createDS("inv-pinnacle", "Midwest Meat Co Inventory", "Midwest Meat Co production inventory", "Midwest Meat Co", "Manual Upload", "Manual", "Today, 10:15 AM", today(10,15), 10080, "14,200", { uploadedFileName: "Pinnacle_Inventory_01_27.xlsx" }),
+      createDS("inv-cascade", "Pacific Jerky Works Inventory", "Pacific Jerky Works production inventory", "Pacific Jerky Works", "Manual Upload", "Manual", "Today, 09:30 AM", today(9,30), 10080, "6,780", { uploadedFileName: "Cascade_Inventory_2026W04.xlsx", hasNonBlockingErrors: true, issue: "1 SKU in inventory not found in SKU master", issues: [
         { id: "cn-1", severity: "error", description: "SKU 'OAT-RAW-BASE' in Cascade inventory report has no match in SKU master data", affectedRecords: 1, example: "OAT-RAW-BASE: 2,400 lbs on hand - not mapped to any finished good SKU" },
       ]}),
       createDS("inv-summit-mfg", "Summit Pack Inventory", "Summit Pack production inventory", "Summit Pack", "Manual Upload", "Manual", "Today, 08:45 AM", today(8,45), 10080, "5,340", { uploadedFileName: "Summit_Inventory_W04.xlsx" }),
