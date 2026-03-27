@@ -8,7 +8,7 @@
     "dev": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "bash -c 'source scripts/load-ssm-env.sh && vite build --mode production --logLevel error'",
+    "build": "vite build --mode production --logLevel error",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
