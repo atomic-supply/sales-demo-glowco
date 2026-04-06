@@ -1,22 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
-import { type FC, useState, useCallback, useEffect } from "react"
+import { type FC } from "react"
 import {
-  Store,
-  Truck,
-  Settings,
-  CheckCircle,
   HardDrive,
   Atom,
-  BarChart3,
-  Footprints,
   User,
-  Package,
-  ClipboardList,
-  Inbox,
+  LayoutDashboard,
+  Table2,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router"
-import { terminology } from "../../data/app-config"
 import { theme } from "../../styles/theme/theme"
 import { borders } from "../../styles"
 
@@ -33,51 +25,19 @@ interface NavLink {
   isNucleus?: boolean
 }
 
-interface NavExpandable {
-  type: "expandable"
-  prefix: string // pathname prefix used to auto-expand
-  name: string
-  icon: Icon
-  children: { href: string; name: string; icon: Icon }[]
-}
-
 interface NavHeader {
   type: "header"
   name: string
 }
 
-type SidebarItem = NavLink | NavExpandable | NavHeader
+type SidebarItem = NavLink | NavHeader
 
 const sidebarItems: SidebarItem[] = [
-  { type: "header", name: "Configuration" },
+  { type: "header", name: "Overview" },
   { type: "link", href: "/data-hub", name: "Data Hub", icon: HardDrive as Icon },
-  { type: "header", name: "Demand" },
-  {
-    type: "expandable",
-    prefix: "/demand",
-    name: terminology.modules.retailers,
-    icon: Store as Icon,
-    children: [
-      { href: "/demand/forecast", name: terminology.plans.consumption, icon: Footprints as Icon },
-      { href: "/demand/validation", name: "Validation", icon: CheckCircle as Icon },
-    ],
-  },
-  {
-    type: "expandable",
-    prefix: "/shipments",
-    name: terminology.modules.shipments,
-    icon: Truck as Icon,
-    children: [
-      { href: "/shipments/walk", name: "Walk", icon: Footprints as Icon },
-      { href: "/shipments/forecast", name: "Forecast", icon: BarChart3 as Icon },
-      { href: "/shipments/validation", name: "Validation", icon: CheckCircle as Icon },
-      { href: "/shipments/configuration", name: "Configuration", icon: Settings as Icon },
-    ],
-  },
-  { type: "header", name: "Supply" },
-  { type: "link", href: "/inventory-health", name: "Inventory Health", icon: ClipboardList as Icon },
-  { type: "link", href: "/inventory-health-mrp", name: "Inventory Health - MRP", icon: Package as Icon },
-  { type: "link", href: "/po-inbox", name: "PO Inbox", icon: Inbox as Icon },
+  { type: "link", href: "/plan-status", name: "Plan Status", icon: LayoutDashboard as Icon },
+  { type: "header", name: "Planning" },
+  { type: "link", href: "/plan/consumption", name: "StageView", icon: Table2 as Icon },
   { type: "header", name: "AI Assistant" },
   { type: "link", href: "/nucleus", name: "Nucleus", icon: Atom as Icon, isNucleus: true },
 ]
@@ -179,35 +139,6 @@ const s = {
       color: ${nucleus ? NUCLEUS_COLOR : BRAND_COLOR};
     }
   `,
-  subList: css`
-    margin-left: 2rem;
-    margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding-left: 0;
-  `,
-  subBtn: (active: boolean) => css`
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 0.3rem;
-    padding: 0.25rem 0;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 400;
-    cursor: pointer;
-    border: none;
-    outline: none;
-    width: 100%;
-    white-space: nowrap;
-    transition: background-color 0.15s, color 0.15s;
-    background-color: transparent;
-    color: ${active ? BRAND_COLOR : colors.mutedForeground};
-    &:hover {
-      color: ${BRAND_COLOR};
-    }
-  `,
 }
 
 export const Sidebar: FC = () => {
@@ -215,36 +146,10 @@ export const Sidebar: FC = () => {
   const location = useLocation()
   const pathname = location.pathname
 
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
-
-  useEffect(() => {
-    setCollapsed((prev) => {
-      const next = new Set(prev)
-      sidebarItems.forEach((item) => {
-        if (item.type === "expandable" && pathname.startsWith(item.prefix)) {
-          next.delete(item.prefix)
-        }
-      })
-      return next.size === prev.size ? prev : next
-    })
-  }, [pathname])
-
-  const toggleSection = useCallback((prefix: string, firstChildHref: string) => {
-    const isRouteMatch = pathname.startsWith(prefix)
-    const isCurrentlyCollapsed = collapsed.has(prefix)
-
-    if (isRouteMatch && !isCurrentlyCollapsed) {
-      setCollapsed((prev) => new Set(prev).add(prefix))
-    } else if (isRouteMatch && isCurrentlyCollapsed) {
-      setCollapsed((prev) => {
-        const next = new Set(prev)
-        next.delete(prefix)
-        return next
-      })
-    } else {
-      navigate(firstChildHref)
-    }
-  }, [pathname, collapsed, navigate])
+  const isActive = (href: string) => {
+    if (href.startsWith("/plan")) return pathname.startsWith("/plan")
+    return pathname === href
+  }
 
   return (
     <aside css={s.container}>
@@ -262,51 +167,17 @@ export const Sidebar: FC = () => {
             )
           }
 
-          if (item.type === "link") {
-            const isActive = pathname === item.href
-            const Icon = item.icon
-            return (
-              <button
-                key={item.href}
-                onClick={() => navigate(item.href)}
-                css={s.navBtn(isActive, item.isNucleus)}
-              >
-                <Icon size={16} />
-                <span>{item.name}</span>
-              </button>
-            )
-          }
-
-          // expandable
-          const isRouteMatch = pathname.startsWith(item.prefix)
-          const isOpen = isRouteMatch && !collapsed.has(item.prefix)
+          const active = isActive(item.href)
           const Icon = item.icon
           return (
-            <div key={item.prefix}>
-              <button
-                onClick={() => toggleSection(item.prefix, item.children[0].href)}
-                css={s.navBtn(isRouteMatch)}
-              >
-                <Icon size={16} />
-                <span>{item.name}</span>
-              </button>
-              {isOpen && (
-                <div css={s.subList}>
-                  {item.children.map((child) => {
-                    const isActive = pathname === child.href
-                    return (
-                      <button
-                        key={child.href}
-                        onClick={() => navigate(child.href)}
-                        css={s.subBtn(isActive)}
-                      >
-                        <span>{child.name}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+            <button
+              key={item.href}
+              onClick={() => navigate(item.href)}
+              css={s.navBtn(active, item.isNucleus)}
+            >
+              <Icon size={16} />
+              <span>{item.name}</span>
+            </button>
           )
         })}
       </nav>
@@ -314,7 +185,7 @@ export const Sidebar: FC = () => {
       <div css={s.bottomSection}>
         <button css={s.profileBtn} title="Profile">
           <User size={16} />
-          <span>Profile</span>
+          <span>Dan O'Keefe</span>
         </button>
       </div>
     </aside>
