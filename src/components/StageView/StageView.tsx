@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { theme } from "../../styles/theme/theme";
 import { InboxBanner } from "./InboxBanner";
 import { PlanTable } from "./PlanTable";
-import { WalkChart } from "./WalkChart";
+import { StageViewFilterBar } from "./StageViewFilterBar";
 import type { ModuleId, ModuleConfig, PlanRow } from "./types";
 
 /* ------------------------------------------------------------------ */
@@ -64,6 +64,19 @@ const MODULE_ORDER: ModuleId[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/*  Default segment values per module                                   */
+/* ------------------------------------------------------------------ */
+
+const DEFAULT_SEGMENTS: Record<ModuleId, string> = {
+  consumption: "channel",
+  shipments: "sku",
+  production: "flavor",
+  kitting: "packConfig",
+  mrp: "material",
+  allocation: "sku",
+};
+
+/* ------------------------------------------------------------------ */
 /*  Props                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -117,7 +130,7 @@ const pillStyles = (color: string, isActive: boolean) => css`
 
 /* Module header */
 const headerStyles = css`
-  margin-bottom: ${theme.spacing.md};
+  margin-bottom: ${theme.spacing.sm};
   flex-shrink: 0;
 `;
 
@@ -140,7 +153,6 @@ const contentStyles = css`
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
 `;
 
 /* ------------------------------------------------------------------ */
@@ -151,10 +163,19 @@ export function StageView({ moduleId, config }: StageViewProps) {
   const navigate = useNavigate();
   const [selectedRow, setSelectedRow] = useState<PlanRow | null>(null);
 
+  /* Filter bar state */
+  const [displayBy, setDisplayBy] = useState<"week" | "month">("week");
+  const [segmentBy, setSegmentBy] = useState<string>(DEFAULT_SEGMENTS[moduleId] ?? "sku");
+  const [unitOfMeasure, setUnitOfMeasure] = useState<string>("sticks");
+  const [searchText, setSearchText] = useState<string>("");
+
   const meta = MODULE_META[moduleId];
 
   const handleModuleClick = useCallback(
     (id: ModuleId) => {
+      setSelectedRow(null);
+      setSearchText("");
+      setSegmentBy(DEFAULT_SEGMENTS[id] ?? "sku");
       navigate(`/plan/${id}`);
     },
     [navigate]
@@ -167,16 +188,16 @@ export function StageView({ moduleId, config }: StageViewProps) {
     []
   );
 
-  /* Walk chart data for selected row */
-  const walkData = useMemo(() => {
-    if (!selectedRow || !config?.walkData) return [];
-    return config.walkData[selectedRow.id] ?? [];
-  }, [selectedRow, config]);
-
   /* Columns / rows / alerts from config or empty */
   const columns = config?.columns ?? [];
   const rows = config?.rows ?? [];
   const alerts = config?.alerts ?? [];
+
+  /* Supply walk data: prefer supplyWalkData, fallback to walkData */
+  const supplyWalkData = useMemo(
+    () => config?.supplyWalkData ?? config?.walkData ?? {},
+    [config]
+  );
 
   return (
     <div css={rootStyles}>
@@ -202,7 +223,20 @@ export function StageView({ moduleId, config }: StageViewProps) {
         <p css={moduleDescStyles}>{meta.description}</p>
       </div>
 
-      {/* Content: inbox + table + chart */}
+      {/* Filter bar */}
+      <StageViewFilterBar
+        moduleId={moduleId}
+        displayBy={displayBy}
+        onDisplayByChange={setDisplayBy}
+        segmentBy={segmentBy}
+        onSegmentByChange={setSegmentBy}
+        unitOfMeasure={unitOfMeasure}
+        onUnitOfMeasureChange={setUnitOfMeasure}
+        searchText={searchText}
+        onSearchChange={setSearchText}
+      />
+
+      {/* Content: inbox + table */}
       <div css={contentStyles}>
         {/* Inbox banner */}
         <InboxBanner alerts={alerts} />
@@ -212,8 +246,12 @@ export function StageView({ moduleId, config }: StageViewProps) {
           <PlanTable
             columns={columns}
             rows={rows}
+            moduleId={moduleId}
+            moduleLabel={meta.label}
             selectedRowId={selectedRow?.id ?? null}
             onRowSelect={handleRowSelect}
+            supplyWalkData={supplyWalkData}
+            searchText={searchText}
           />
         ) : (
           <div
@@ -230,11 +268,6 @@ export function StageView({ moduleId, config }: StageViewProps) {
           >
             No plan data configured for this module.
           </div>
-        )}
-
-        {/* Walk chart -- shown when a row is selected */}
-        {selectedRow && walkData.length > 0 && (
-          <WalkChart data={walkData} title={selectedRow.label} />
         )}
       </div>
     </div>

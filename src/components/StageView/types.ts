@@ -12,6 +12,7 @@ export interface PlanColumn {
   type: "label" | "number" | "wos" | "badge" | "pct";
   sticky?: boolean;
   width?: number;
+  editable?: boolean;
 }
 
 export interface PlanRow {
@@ -49,4 +50,5 @@ export interface ModuleConfig {
   rows: PlanRow[];
   alerts: InboxAlert[];
   walkData: Record<string, WalkDataPoint[]>;
+  supplyWalkData?: Record<string, WalkDataPoint[]>;
 }
