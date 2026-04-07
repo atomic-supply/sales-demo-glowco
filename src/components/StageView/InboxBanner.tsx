@@ -27,6 +27,7 @@ const bannerStyles = css`
   border-radius: ${theme.borderRadius.lg};
   margin-bottom: ${theme.spacing.md};
   overflow: hidden;
+  flex-shrink: 0;
 `;
 
 const triggerStyles = css`

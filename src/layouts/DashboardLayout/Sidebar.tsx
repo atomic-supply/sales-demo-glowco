@@ -6,7 +6,14 @@ import {
   Atom,
   User,
   LayoutDashboard,
-  Table2,
+  BarChart3,
+  PieChart,
+  CheckCircle,
+  Truck,
+  Factory,
+  Package,
+  Layers,
+  GitBranch,
 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router"
 import { theme } from "../../styles/theme/theme"
@@ -36,8 +43,16 @@ const sidebarItems: SidebarItem[] = [
   { type: "header", name: "Overview" },
   { type: "link", href: "/data-hub", name: "Data Hub", icon: HardDrive as Icon },
   { type: "link", href: "/plan-status", name: "Plan Status", icon: LayoutDashboard as Icon },
-  { type: "header", name: "Planning" },
-  { type: "link", href: "/plan/consumption", name: "StageView", icon: Table2 as Icon },
+  { type: "header", name: "Demand" },
+  { type: "link", href: "/consumption/plan", name: "Consumption Plan", icon: BarChart3 as Icon },
+  { type: "link", href: "/consumption/pivot", name: "Pivot", icon: PieChart as Icon },
+  { type: "link", href: "/consumption/validation", name: "Validation", icon: CheckCircle as Icon },
+  { type: "header", name: "Supply" },
+  { type: "link", href: "/plan/shipments", name: "Shipments", icon: Truck as Icon },
+  { type: "link", href: "/plan/production", name: "Production", icon: Factory as Icon },
+  { type: "link", href: "/plan/kitting", name: "Kitting", icon: Package as Icon },
+  { type: "link", href: "/plan/mrp", name: "MRP", icon: Layers as Icon },
+  { type: "link", href: "/plan/allocation", name: "Allocation", icon: GitBranch as Icon },
   { type: "header", name: "AI Assistant" },
   { type: "link", href: "/nucleus", name: "Nucleus", icon: Atom as Icon, isNucleus: true },
 ]
@@ -147,7 +162,8 @@ export const Sidebar: FC = () => {
   const pathname = location.pathname
 
   const isActive = (href: string) => {
-    if (href.startsWith("/plan")) return pathname.startsWith("/plan")
+    if (href.startsWith("/consumption")) return pathname.startsWith("/consumption") && pathname.startsWith(href)
+    if (href.startsWith("/plan/")) return pathname === href
     return pathname === href
   }
 

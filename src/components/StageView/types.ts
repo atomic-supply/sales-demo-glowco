@@ -24,6 +24,24 @@ export interface PlanRow {
   attribution?: "engine" | "override" | "upstream";
 }
 
+export type ActionStatus = "needs-review" | "approved" | "in-progress" | "on-track";
+
+export interface ActionRow {
+  id: string;
+  label: string;
+  values: Record<string, number | string | null>;
+  status: ActionStatus;
+  /** IDs of detail rows belonging to this action */
+  detailIds: string[];
+}
+
+export interface ActionTableConfig {
+  title: string;
+  description: string;
+  columns: PlanColumn[];
+  rows: ActionRow[];
+}
+
 export interface InboxAlert {
   id: string;
   severity: "warning" | "info" | "critical";
@@ -46,9 +64,9 @@ export interface ModuleConfig {
   shortLabel: string;
   description: string;
   color: string;
+  actionTable: ActionTableConfig;
   columns: PlanColumn[];
   rows: PlanRow[];
   alerts: InboxAlert[];
   walkData: Record<string, WalkDataPoint[]>;
-  supplyWalkData?: Record<string, WalkDataPoint[]>;
 }

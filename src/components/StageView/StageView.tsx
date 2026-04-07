@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useState, useMemo } from "react";
 import { theme } from "../../styles/theme/theme";
 import { InboxBanner } from "./InboxBanner";
-import { PlanTable } from "./PlanTable";
+import { ActionTable } from "./ActionTable";
+import { DetailTable } from "./DetailTable";
 import { StageViewFilterBar } from "./StageViewFilterBar";
-import type { ModuleId, ModuleConfig, PlanRow } from "./types";
+import type { ModuleId, ModuleConfig } from "./types";
 
 /* ------------------------------------------------------------------ */
-/*  Module metadata (pills / labels) -- minimal defaults                */
+/*  Module metadata (pills / labels)                                    */
 /* ------------------------------------------------------------------ */
 
 const MODULE_META: Record<
@@ -54,15 +54,6 @@ const MODULE_META: Record<
   },
 };
 
-const MODULE_ORDER: ModuleId[] = [
-  "consumption",
-  "shipments",
-  "production",
-  "kitting",
-  "mrp",
-  "allocation",
-];
-
 /* ------------------------------------------------------------------ */
 /*  Default segment values per module                                   */
 /* ------------------------------------------------------------------ */
@@ -74,7 +65,7 @@ const DEFAULT_SEGMENTS: Record<ModuleId, string> = {
   kitting: "packConfig",
   mrp: "material",
   allocation: "sku",
-};
+} as Record<ModuleId, string>;
 
 /* ------------------------------------------------------------------ */
 /*  Props                                                               */
@@ -97,38 +88,6 @@ const rootStyles = css`
   height: 100%;
 `;
 
-/* Module selector bar */
-const selectorBarStyles = css`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 0 12px;
-  overflow-x: auto;
-  flex-shrink: 0;
-`;
-
-const pillStyles = (color: string, isActive: boolean) => css`
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 14px;
-  border-radius: 999px;
-  font-size: ${theme.typography.fontSize.xs};
-  font-weight: ${theme.typography.fontWeight.medium};
-  font-family: ${theme.typography.fontFamily};
-  white-space: nowrap;
-  cursor: pointer;
-  border: 1px solid ${isActive ? color : theme.colors.gray200};
-  background: ${isActive ? color : theme.colors.white};
-  color: ${isActive ? theme.colors.white : theme.colors.gray600};
-  transition: all 0.15s ease;
-
-  &:hover {
-    border-color: ${color};
-    ${!isActive ? `color: ${color};` : ""}
-  }
-`;
-
-/* Module header */
 const headerStyles = css`
   margin-bottom: ${theme.spacing.sm};
   flex-shrink: 0;
@@ -147,12 +106,13 @@ const moduleDescStyles = css`
   margin: 0;
 `;
 
-/* Content area */
 const contentStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  gap: ${theme.spacing.md};
+  overflow-y: auto;
 `;
 
 /* ------------------------------------------------------------------ */
@@ -160,8 +120,7 @@ const contentStyles = css`
 /* ------------------------------------------------------------------ */
 
 export function StageView({ moduleId, config }: StageViewProps) {
-  const navigate = useNavigate();
-  const [selectedRow, setSelectedRow] = useState<PlanRow | null>(null);
+  const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
 
   /* Filter bar state */
   const [displayBy, setDisplayBy] = useState<"week" | "month">("week");
@@ -171,52 +130,11 @@ export function StageView({ moduleId, config }: StageViewProps) {
 
   const meta = MODULE_META[moduleId];
 
-  const handleModuleClick = useCallback(
-    (id: ModuleId) => {
-      setSelectedRow(null);
-      setSearchText("");
-      setSegmentBy(DEFAULT_SEGMENTS[id] ?? "sku");
-      navigate(`/plan/${id}`);
-    },
-    [navigate]
-  );
-
-  const handleRowSelect = useCallback(
-    (row: PlanRow) => {
-      setSelectedRow((prev) => (prev?.id === row.id ? null : row));
-    },
-    []
-  );
-
-  /* Columns / rows / alerts from config or empty */
-  const columns = config?.columns ?? [];
-  const rows = config?.rows ?? [];
   const alerts = config?.alerts ?? [];
-
-  /* Supply walk data: prefer supplyWalkData, fallback to walkData */
-  const supplyWalkData = useMemo(
-    () => config?.supplyWalkData ?? config?.walkData ?? {},
-    [config]
-  );
+  const walkData = useMemo(() => config?.walkData ?? {}, [config]);
 
   return (
     <div css={rootStyles}>
-      {/* Module selector pills */}
-      <div css={selectorBarStyles}>
-        {MODULE_ORDER.map((id) => {
-          const m = MODULE_META[id];
-          return (
-            <button
-              key={id}
-              css={pillStyles(m.color, id === moduleId)}
-              onClick={() => handleModuleClick(id)}
-            >
-              {m.shortLabel}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Module title */}
       <div css={headerStyles}>
         <h2 css={moduleNameStyles}>{meta.label}</h2>
@@ -236,21 +154,27 @@ export function StageView({ moduleId, config }: StageViewProps) {
         onSearchChange={setSearchText}
       />
 
-      {/* Content: inbox + table */}
+      {/* Content: inbox + action table + detail table */}
       <div css={contentStyles}>
-        {/* Inbox banner */}
         <InboxBanner alerts={alerts} />
 
-        {/* Plan table */}
-        {columns.length > 0 && rows.length > 0 ? (
-          <PlanTable
-            columns={columns}
-            rows={rows}
+        {config?.actionTable && (
+          <ActionTable
+            config={config.actionTable}
+            selectedActionId={selectedActionId}
+            onActionSelect={setSelectedActionId}
+          />
+        )}
+
+        {config && config.columns.length > 0 && config.rows.length > 0 ? (
+          <DetailTable
+            columns={config.columns}
+            rows={config.rows}
             moduleId={moduleId}
             moduleLabel={meta.label}
-            selectedRowId={selectedRow?.id ?? null}
-            onRowSelect={handleRowSelect}
-            supplyWalkData={supplyWalkData}
+            selectedActionId={selectedActionId}
+            actionRows={config.actionTable?.rows ?? []}
+            supplyWalkData={walkData}
             searchText={searchText}
           />
         ) : (

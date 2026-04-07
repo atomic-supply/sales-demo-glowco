@@ -46,6 +46,8 @@ export const PACK_CONFIGS: PackConfig[] = [
 
 // ─── Channels ────────────────────────────────────────────────────────────────
 
+export type ChannelType = "online" | "retail"
+
 export interface Channel {
   id: string
   name: string
@@ -55,15 +57,21 @@ export interface Channel {
   safetyStockWOS: number
   /** Lead time in days from 3PL to customer */
   fulfillmentLeadDays: number
+  /** Online vs retail — determines UPSPW methodology applicability */
+  channelType: ChannelType
+  /** Number of retail stores carrying LMNT (retail channels only) */
+  storeCount: number
+  /** Order cadence for this channel */
+  orderCadence: "weekly" | "monthly"
 }
 
 export const CHANNELS: Channel[] = [
-  { id: "shopify-dtc", name: "Shopify DTC", demandShare: 0.30, safetyStockWOS: 8, fulfillmentLeadDays: 3 },
-  { id: "amazon", name: "Amazon", demandShare: 0.25, safetyStockWOS: 10, fulfillmentLeadDays: 7 },
-  { id: "target", name: "Target", demandShare: 0.15, safetyStockWOS: 12, fulfillmentLeadDays: 14 },
-  { id: "walmart", name: "Walmart", demandShare: 0.12, safetyStockWOS: 12, fulfillmentLeadDays: 14 },
-  { id: "wholesale", name: "Wholesale", demandShare: 0.10, safetyStockWOS: 10, fulfillmentLeadDays: 7 },
-  { id: "vitamin-shoppe", name: "Vitamin Shoppe", demandShare: 0.08, safetyStockWOS: 10, fulfillmentLeadDays: 10 },
+  { id: "shopify-dtc", name: "Shopify DTC", demandShare: 0.30, safetyStockWOS: 8, fulfillmentLeadDays: 3, channelType: "online", storeCount: 0, orderCadence: "monthly" },
+  { id: "amazon", name: "Amazon", demandShare: 0.25, safetyStockWOS: 10, fulfillmentLeadDays: 7, channelType: "online", storeCount: 0, orderCadence: "monthly" },
+  { id: "target", name: "Target", demandShare: 0.15, safetyStockWOS: 12, fulfillmentLeadDays: 14, channelType: "retail", storeCount: 1_953, orderCadence: "weekly" },
+  { id: "walmart", name: "Walmart", demandShare: 0.12, safetyStockWOS: 12, fulfillmentLeadDays: 14, channelType: "retail", storeCount: 4_742, orderCadence: "weekly" },
+  { id: "wholesale", name: "Wholesale", demandShare: 0.10, safetyStockWOS: 10, fulfillmentLeadDays: 7, channelType: "online", storeCount: 0, orderCadence: "monthly" },
+  { id: "vitamin-shoppe", name: "Vitamin Shoppe", demandShare: 0.08, safetyStockWOS: 10, fulfillmentLeadDays: 10, channelType: "retail", storeCount: 780, orderCadence: "monthly" },
 ]
 
 // ─── Co-Manufacturer Sites ───────────────────────────────────────────────────
