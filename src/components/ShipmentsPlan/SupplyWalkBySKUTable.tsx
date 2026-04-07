@@ -3,8 +3,8 @@ import { css } from "@emotion/react"
 import { useState, useCallback, useMemo, Fragment } from "react"
 import { ChevronDown, ChevronRight, X, Save } from "lucide-react"
 import { theme } from "../../styles/theme/theme"
-import type { ShipmentsPeriod, SkuSupplyWalkRow } from "../../data/lmnt-shipments-data"
-import { SUPPLY_WALK_MEASURES } from "../../data/lmnt-shipments-data"
+import type { ShipmentsPeriod, SkuSupplyWalkRow } from "../../data/glowco-shipments-data"
+import { SUPPLY_WALK_MEASURES } from "../../data/glowco-shipments-data"
 
 interface Props {
   periods: ShipmentsPeriod[]

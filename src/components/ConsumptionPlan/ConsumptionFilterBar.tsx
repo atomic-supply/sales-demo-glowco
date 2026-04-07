@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { theme } from "../../styles/theme/theme"
-import { CHANNELS } from "../../data/lmnt-master-data"
+import { CHANNELS } from "../../data/glowco-master-data"
 
 interface Props {
   displayBy: "week" | "month"

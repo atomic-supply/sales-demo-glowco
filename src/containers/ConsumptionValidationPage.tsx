@@ -3,8 +3,8 @@ import { css } from "@emotion/react"
 import { useState, useMemo, useCallback } from "react"
 import { theme } from "../styles/theme/theme"
 import { ActionTable } from "../components/StageView/ActionTable"
-import { getConsumptionValidationData } from "../data/lmnt-consumption-data"
-import type { ValidationOverride } from "../data/lmnt-consumption-data"
+import { getConsumptionValidationData } from "../data/glowco-consumption-data"
+import type { ValidationOverride } from "../data/glowco-consumption-data"
 import { Check, X, Pencil } from "lucide-react"
 
 const pageStyles = css`

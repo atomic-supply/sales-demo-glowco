@@ -132,8 +132,8 @@ export const staticDataGroups: StaticDataGroup[] = [
     id: "mappings", name: "Mapping Tables",
     sources: [
       { id: "channel-3pl-map", name: "Channel to 3PL Mapping", description: "Maps sales channels to fulfillment locations", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:00 AM", lastUpdatedDate: today(2,0), type: "Mapping", recordCount: "18" },
-      { id: "sku-flavor-map", name: "SKU to Flavor Mapping", description: "Maps finished good SKUs to base flavors", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:05 AM", lastUpdatedDate: today(2,5), type: "Mapping", recordCount: "64" },
-      { id: "site-flavor-map", name: "Co-Man Site Flavor Capability", description: "Which flavors each co-man site can produce", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:10 AM", lastUpdatedDate: today(2,10), type: "Mapping", recordCount: "24" },
+      { id: "sku-formulation-map", name: "SKU to Formulation Mapping", description: "Maps finished good SKUs to base formulations", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:05 AM", lastUpdatedDate: today(2,5), type: "Mapping", recordCount: "64" },
+      { id: "site-formulation-map", name: "Co-Man Site Formulation Capability", description: "Which formulations each co-man site can produce", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:10 AM", lastUpdatedDate: today(2,10), type: "Mapping", recordCount: "24" },
     ],
   },
   {
@@ -149,7 +149,7 @@ export const staticDataGroups: StaticDataGroup[] = [
   {
     id: "master", name: "Master Data",
     sources: [
-      { id: "sku-master", name: "SKU Master", description: "All active SKUs: flavors, pack configs, categories", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:00 AM", lastUpdatedDate: today(2,0), type: "Master Data", recordCount: "64" },
+      { id: "sku-master", name: "SKU Master", description: "All active SKUs: formulations, pack configs, categories", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:00 AM", lastUpdatedDate: today(2,0), type: "Master Data", recordCount: "64" },
       { id: "bom-master", name: "Bill of Materials", description: "BOM definitions: blend, film, carton per stick", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:05 AM", lastUpdatedDate: today(2,5), type: "Master Data", recordCount: "32" },
       { id: "coman-master", name: "Co-Man & 3PL Master", description: "Sites, capabilities, contacts", originalSource: "Internal", ingestionLocation: "Manual Upload", method: "Manual", lastUpdated: "Today, 02:08 AM", lastUpdatedDate: today(2,8), type: "Master Data", recordCount: "9" },
     ],

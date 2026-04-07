@@ -19,12 +19,12 @@ const SEGMENT_OPTIONS: Record<ModuleId, { value: string; label: string }[]> = {
     { value: "shipTo", label: "Ship-To" },
   ],
   production: [
-    { value: "flavor", label: "Flavor" },
+    { value: "formulation", label: "Formulation" },
     { value: "coManSite", label: "Co-Man Site" },
   ],
   kitting: [
     { value: "packConfig", label: "Pack Config" },
-    { value: "flavor", label: "Flavor" },
+    { value: "formulation", label: "Formulation" },
   ],
   mrp: [
     { value: "material", label: "Material" },

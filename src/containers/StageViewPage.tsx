@@ -10,11 +10,11 @@ import {
   getKittingData,
   getMRPData,
   getAllocationData,
-} from "../data/lmnt-plan-data"
-import type { DualTableData } from "../data/lmnt-plan-data"
-import { getInboxAlerts } from "../data/lmnt-inbox-data"
+} from "../data/glowco-plan-data"
+import type { DualTableData } from "../data/glowco-plan-data"
+import { getInboxAlerts } from "../data/glowco-inbox-data"
 import type { ModuleConfig, WalkDataPoint } from "../components/StageView/types"
-import { FLAVORS } from "../data/lmnt-master-data"
+import { FORMULATIONS } from "../data/glowco-master-data"
 
 const VALID_MODULES: ModuleId[] = ["shipments", "production", "kitting", "mrp", "allocation"]
 
@@ -34,15 +34,15 @@ function generateWalkData(moduleId: ModuleId, rowId: string): WalkDataPoint[] {
   const periods = 12
   const points: WalkDataPoint[] = []
 
-  const flavorIdx = FLAVORS.findIndex(f => rowId.includes(f.id))
-  const base = flavorIdx >= 0 ? FLAVORS[flavorIdx].monthlyDemand : 2_000_000
+  const flavorIdx = FORMULATIONS.findIndex(f => rowId.includes(f.id))
+  const base = flavorIdx >= 0 ? FORMULATIONS[flavorIdx].monthlyDemand : 2_000_000
   const weeklyBase = base / 4.33
 
   for (let p = 0; p < periods; p++) {
     const label = `Wk ${p + 1}`
 
     const seasonIdx = (4 + Math.floor(p / 4.33)) % 12
-    const season = flavorIdx >= 0 ? FLAVORS[flavorIdx].seasonality[seasonIdx] : 1
+    const season = flavorIdx >= 0 ? FORMULATIONS[flavorIdx].seasonality[seasonIdx] : 1
 
     const periodBase = weeklyBase
 

@@ -1,5 +1,5 @@
 // ============================================================================
-// LMNT PLAN DATA — Dual-component data for all 6 modules
+// GLOWCO PLAN DATA — Dual-component data for all 6 modules
 // Each module returns: actionTable (top) + detail columns/rows (bottom)
 // Point-in-time focused — time series lives in supply walk expanders only
 // ============================================================================
@@ -7,7 +7,7 @@
 import { seededRand } from "../utils/random"
 import type { PlanColumn, PlanRow, ActionRow, ActionTableConfig, ActionStatus } from "../components/StageView/types"
 import {
-  FLAVORS,
+  FORMULATIONS,
   PACK_CONFIGS,
   CHANNELS,
   COMAN_SITES,
@@ -17,25 +17,25 @@ import {
   TARGET_WOS_WIP,
   TARGET_WOS_FG,
   getMonthlyDemand,
-} from "./lmnt-master-data"
+} from "./glowco-master-data"
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-const WEIGHTED_STICKS_PER_UNIT =
-  PACK_CONFIGS.reduce((s, p) => s + p.sticksPerUnit * p.demandShare, 0)
+const WEIGHTED_UNITS_PER_PACK =
+  PACK_CONFIGS.reduce((s, p) => s + p.unitsPerPack * p.demandShare, 0)
 
-function sticksToUnits(sticks: number): number {
-  return Math.round(sticks / WEIGHTED_STICKS_PER_UNIT)
+function unitsToPackUnits(units: number): number {
+  return Math.round(units / WEIGHTED_UNITS_PER_PACK)
 }
 
-function getFlavorMonthlySticks(): number[][] {
-  return FLAVORS.map((f) =>
+function getFormulationMonthlyUnits(): number[][] {
+  return FORMULATIONS.map((f) =>
     Array.from({ length: 12 }, (_, mo) => getMonthlyDemand(f, mo)),
   )
 }
 
-function getTotalMonthlySticks(): number[] {
-  const fm = getFlavorMonthlySticks()
+function getTotalMonthlyUnits(): number[] {
+  const fm = getFormulationMonthlyUnits()
   return Array.from({ length: 12 }, (_, mo) =>
     fm.reduce((s, arr) => s + arr[mo], 0),
   )
@@ -58,11 +58,11 @@ export interface DualTableData {
 // ============================================================================
 // 1. CONSUMPTION MODULE
 // Action: Demand signals by channel (point-in-time for current month)
-// Detail: Flavor × Channel
+// Detail: Formulation × Channel
 // ============================================================================
 
 export function getConsumptionData(): DualTableData {
-  const flavorSticks = getFlavorMonthlySticks()
+  const formulationUnits = getFormulationMonthlyUnits()
 
   // --- Action Table: 1 row per channel ---
   const actionColumns: PlanColumn[] = [
@@ -77,9 +77,9 @@ export function getConsumptionData(): DualTableData {
 
   const actionRows: ActionRow[] = []
 
-  // --- Detail Table: Flavor × Channel (point-in-time current month) ---
+  // --- Detail Table: Formulation × Channel (point-in-time current month) ---
   const detailColumns: PlanColumn[] = [
-    { key: "label", label: "Flavor / Channel", type: "label", sticky: true, width: 220 },
+    { key: "label", label: "Formulation / Channel", type: "label", sticky: true, width: 220 },
     { key: "forecast", label: "Forecast", type: "number" },
     { key: "actual", label: "Actual", type: "number" },
     { key: "baseline", label: "Baseline", type: "number" },
@@ -106,13 +106,13 @@ export function getConsumptionData(): DualTableData {
       forecast: 0, actual: 0, baseline: 0, override: null, final: 0, yoy: 0, attribution: null,
     }
 
-    for (let fi = 0; fi < FLAVORS.length; fi++) {
-      const flavor = FLAVORS[fi]
-      const childId = `cons-${channel.id}-${flavor.id}`
+    for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+      const formulation = FORMULATIONS[fi]
+      const childId = `cons-${channel.id}-${formulation.id}`
       childIds.push(childId)
 
-      const stickDemand = Math.round(flavorSticks[fi][0] * channel.demandShare)
-      const forecast = sticksToUnits(stickDemand)
+      const unitDemand = Math.round(formulationUnits[fi][0] * channel.demandShare)
+      const forecast = unitsToPackUnits(unitDemand)
       const histFactor = 0.88 + rng() * 0.07
       const actual = Math.round(forecast * histFactor)
       const baseline = forecast
@@ -126,7 +126,7 @@ export function getConsumptionData(): DualTableData {
 
       detailRows.push({
         id: childId,
-        label: flavor.name,
+        label: formulation.name,
         type: "child",
         parentId,
         values: { forecast, actual, baseline, override, final: final_, yoy, attribution: override != null ? "override" : "engine" },
@@ -197,11 +197,11 @@ export function getConsumptionData(): DualTableData {
 // ============================================================================
 // 2. SHIPMENTS MODULE
 // Action: Shipment decisions by channel (point-in-time)
-// Detail: Flavor × Warehouse
+// Detail: Formulation × Warehouse
 // ============================================================================
 
 export function getShipmentsData(): DualTableData {
-  const flavorSticks = getFlavorMonthlySticks()
+  const formulationUnits = getFormulationMonthlyUnits()
 
   const actionColumns: PlanColumn[] = [
     { key: "label", label: "Channel", type: "label", sticky: true, width: 220 },
@@ -213,7 +213,7 @@ export function getShipmentsData(): DualTableData {
   ]
 
   const detailColumns: PlanColumn[] = [
-    { key: "label", label: "Flavor / Warehouse", type: "label", sticky: true, width: 220 },
+    { key: "label", label: "Formulation / Warehouse", type: "label", sticky: true, width: 220 },
     { key: "demand", label: "Demand", type: "number" },
     { key: "curr_inv", label: "Current Inv", type: "number" },
     { key: "ss_target", label: "SS Target", type: "number" },
@@ -242,26 +242,26 @@ export function getShipmentsData(): DualTableData {
     const chWarehouses = warehousesByChannel[channel.id]
     const totalWhShare = chWarehouses.reduce((s, wh) => s + wh.allocationShare, 0)
 
-    for (let fi = 0; fi < FLAVORS.length; fi++) {
-      const flavor = FLAVORS[fi]
-      const parentId = `ship-${channel.id}-${flavor.id}`
+    for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+      const formulation = FORMULATIONS[fi]
+      const parentId = `ship-${channel.id}-${formulation.id}`
       const parentValues: Record<string, number | string | null> = {
         demand: 0, curr_inv: 0, ss_target: 0, ship_qty: 0, end_inv: 0, wos: 0, attribution: null,
       }
 
       for (const wh of chWarehouses) {
-        const childId = `ship-${channel.id}-${flavor.id}-${wh.id}`
+        const childId = `ship-${channel.id}-${formulation.id}-${wh.id}`
         const rng = seededRand(
-          flavor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 23 +
+          formulation.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 23 +
             wh.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 19 +
             channel.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 13,
         )
 
-        // Channel's share of this flavor, distributed across warehouses serving the channel
-        const channelStickDemand = Math.round(flavorSticks[fi][0] * channel.demandShare)
+        // Channel's share of this formulation, distributed across warehouses serving the channel
+        const channelUnitDemand = Math.round(formulationUnits[fi][0] * channel.demandShare)
         const whShareOfChannel = totalWhShare > 0 ? wh.allocationShare / totalWhShare : 1 / chWarehouses.length
-        const whStickDemand = Math.round(channelStickDemand * whShareOfChannel)
-        const weeklyUnitDemand = Math.round(sticksToUnits(whStickDemand) / 4)
+        const whUnitDemand = Math.round(channelUnitDemand * whShareOfChannel)
+        const weeklyUnitDemand = Math.round(unitsToPackUnits(whUnitDemand) / 4)
         const ssTarget = weeklyUnitDemand * TARGET_WOS_FG
         const currInv = Math.round(ssTarget * (0.9 + rng() * 0.3))
         const demand = Math.round(weeklyUnitDemand * (0.9 + rng() * 0.2))
@@ -298,7 +298,7 @@ export function getShipmentsData(): DualTableData {
 
       detailRows.push({
         id: parentId,
-        label: flavor.name,
+        label: formulation.name,
         type: "parent",
         values: parentValues,
       })
@@ -328,11 +328,11 @@ export function getShipmentsData(): DualTableData {
     })
   }
 
-  // Sort detail rows: group by channel, then flavor parent + warehouse children
+  // Sort detail rows: group by channel, then formulation parent + warehouse children
   const sorted: PlanRow[] = []
   for (const channel of CHANNELS) {
-    for (const flavor of FLAVORS) {
-      const parentId = `ship-${channel.id}-${flavor.id}`
+    for (const formulation of FORMULATIONS) {
+      const parentId = `ship-${channel.id}-${formulation.id}`
       const parent = detailRows.find((r) => r.id === parentId)
       if (parent) {
         sorted.push(parent)
@@ -356,17 +356,17 @@ export function getShipmentsData(): DualTableData {
 // ============================================================================
 // 3. PRODUCTION MODULE
 // Action: Production decisions by co-man site (point-in-time)
-// Detail: Flavor × Site with production mix
+// Detail: Formulation × Site with production mix
 // ============================================================================
 
 export function getProductionData(): DualTableData {
-  const flavorSticks = getFlavorMonthlySticks()
-  const tollingSites = COMAN_SITES.filter((s) => s.monthlyCapacity > 0)
+  const formulationUnits = getFormulationMonthlyUnits()
+  const fillingSites = COMAN_SITES.filter((s) => s.monthlyCapacity > 0)
 
   const actionColumns: PlanColumn[] = [
     { key: "label", label: "Co-Man Site", type: "label", sticky: true, width: 260 },
-    { key: "flavors", label: "Flavors", type: "number" },
-    { key: "planned_sticks", label: "Planned Sticks", type: "number", editable: true },
+    { key: "formulations", label: "Formulations", type: "number" },
+    { key: "planned_units", label: "Planned Units", type: "number", editable: true },
     { key: "capacity_pct", label: "Capacity %", type: "pct" },
     { key: "min_volume", label: "Min Volume", type: "number" },
     { key: "priority", label: "Priority", type: "number" },
@@ -375,7 +375,7 @@ export function getProductionData(): DualTableData {
   ]
 
   const detailColumns: PlanColumn[] = [
-    { key: "label", label: "Flavor / Site", type: "label", sticky: true, width: 240 },
+    { key: "label", label: "Formulation / Site", type: "label", sticky: true, width: 240 },
     { key: "start_wip", label: "Start WIP", type: "number" },
     { key: "production", label: "Production", type: "number", editable: true },
     { key: "kit_demand", label: "Kit Demand", type: "number" },
@@ -387,68 +387,68 @@ export function getProductionData(): DualTableData {
   const actionRows: ActionRow[] = []
   const detailRows: PlanRow[] = []
 
-  // --- Pass 1: compute uncapped production per site-flavor, then scale to capacity ---
-  interface SiteFlavorEntry {
-    flavorIdx: number; siteId: string; kitDemand: number; uncappedProd: number; startWip: number; rng: () => number
+  // --- Pass 1: compute uncapped production per site-formulation, then scale to capacity ---
+  interface SiteFormulationEntry {
+    formulationIdx: number; siteId: string; kitDemand: number; uncappedProd: number; startWip: number; rng: () => number
   }
-  const entries: SiteFlavorEntry[] = []
+  const entries: SiteFormulationEntry[] = []
   const siteTotalUncapped: Record<string, number> = {}
-  for (const site of tollingSites) siteTotalUncapped[site.id] = 0
+  for (const site of fillingSites) siteTotalUncapped[site.id] = 0
 
-  for (let fi = 0; fi < FLAVORS.length; fi++) {
-    const flavor = FLAVORS[fi]
-    const capableSites = tollingSites.filter((s) => s.flavorCapability.includes(flavor.id))
+  for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+    const formulation = FORMULATIONS[fi]
+    const capableSites = fillingSites.filter((s) => s.formulationCapability.includes(formulation.id))
     const totalShare = capableSites.reduce((s, site) => s + site.productionShare, 0)
 
     for (const site of capableSites) {
-      const siteFlavorShare = site.productionShare / totalShare
+      const siteFormulationShare = site.productionShare / totalShare
       const rng = seededRand(
-        flavor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 29 +
+        formulation.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 29 +
           site.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 37,
       )
-      const kitDemand = Math.round(flavorSticks[fi][0] * siteFlavorShare)
+      const kitDemand = Math.round(formulationUnits[fi][0] * siteFormulationShare)
       const weeklyDemand = kitDemand / 4.33
       const startWip = Math.round(weeklyDemand * TARGET_WOS_WIP * (0.9 + rng() * 0.2))
       const uncappedProd = Math.ceil(kitDemand / PRODUCTION_BATCH_SIZE) * PRODUCTION_BATCH_SIZE
 
-      entries.push({ flavorIdx: fi, siteId: site.id, kitDemand, uncappedProd, startWip, rng })
+      entries.push({ formulationIdx: fi, siteId: site.id, kitDemand, uncappedProd, startWip, rng })
       siteTotalUncapped[site.id] += uncappedProd
     }
   }
 
   // Scale factor per site: target ~80% utilization
   const siteScale: Record<string, number> = {}
-  for (const site of tollingSites) {
+  for (const site of fillingSites) {
     const target = site.monthlyCapacity * 0.82
     siteScale[site.id] = siteTotalUncapped[site.id] > 0 ? Math.min(1, target / siteTotalUncapped[site.id]) : 1
   }
 
   // --- Pass 2: build rows with scaled production ---
-  const siteAgg: Record<string, { flavors: number; planned: number; childIds: string[] }> = {}
-  for (const site of tollingSites) {
-    siteAgg[site.id] = { flavors: 0, planned: 0, childIds: [] }
+  const siteAgg: Record<string, { formulations: number; planned: number; childIds: string[] }> = {}
+  for (const site of fillingSites) {
+    siteAgg[site.id] = { formulations: 0, planned: 0, childIds: [] }
   }
 
-  // Group entries by flavor for parent rows
-  const flavorEntries: Map<number, SiteFlavorEntry[]> = new Map()
+  // Group entries by formulation for parent rows
+  const formulationEntries: Map<number, SiteFormulationEntry[]> = new Map()
   for (const e of entries) {
-    if (!flavorEntries.has(e.flavorIdx)) flavorEntries.set(e.flavorIdx, [])
-    flavorEntries.get(e.flavorIdx)!.push(e)
+    if (!formulationEntries.has(e.formulationIdx)) formulationEntries.set(e.formulationIdx, [])
+    formulationEntries.get(e.formulationIdx)!.push(e)
   }
 
-  for (let fi = 0; fi < FLAVORS.length; fi++) {
-    const flavor = FLAVORS[fi]
-    const parentId = `prod-${flavor.id}`
+  for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+    const formulation = FORMULATIONS[fi]
+    const parentId = `prod-${formulation.id}`
     const parentValues: Record<string, number | string | null> = {
       start_wip: 0, production: 0, kit_demand: 0, end_wip: 0, wos: 0, attribution: null,
     }
 
-    const feList = flavorEntries.get(fi) ?? []
+    const feList = formulationEntries.get(fi) ?? []
     const capableSiteIds = feList.map(e => e.siteId)
 
     for (const entry of feList) {
-      const childId = `prod-${flavor.id}-${entry.siteId}`
-      const site = tollingSites.find(s => s.id === entry.siteId)!
+      const childId = `prod-${formulation.id}-${entry.siteId}`
+      const site = fillingSites.find(s => s.id === entry.siteId)!
       const scale = siteScale[entry.siteId]
       const production = Math.round((entry.uncappedProd * scale) / PRODUCTION_BATCH_SIZE) * PRODUCTION_BATCH_SIZE || PRODUCTION_BATCH_SIZE
       const endWip = entry.startWip + production - entry.kitDemand
@@ -469,7 +469,7 @@ export function getProductionData(): DualTableData {
       parentValues.kit_demand = (parentValues.kit_demand as number) + entry.kitDemand
       parentValues.end_wip = (parentValues.end_wip as number) + endWip
 
-      siteAgg[entry.siteId].flavors += 1
+      siteAgg[entry.siteId].formulations += 1
       siteAgg[entry.siteId].planned += production
       siteAgg[entry.siteId].childIds.push(childId)
     }
@@ -481,7 +481,7 @@ export function getProductionData(): DualTableData {
 
     detailRows.push({
       id: parentId,
-      label: flavor.name,
+      label: formulation.name,
       type: "parent",
       values: parentValues,
     })
@@ -491,8 +491,8 @@ export function getProductionData(): DualTableData {
     }
   }
 
-  // Build action rows per tolling site
-  for (const site of tollingSites) {
+  // Build action rows per filling site
+  for (const site of fillingSites) {
     const agg = siteAgg[site.id]
     const rng = seededRand(site.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 41)
     const capacityPct = site.monthlyCapacity > 0 ? agg.planned / site.monthlyCapacity : 0
@@ -504,8 +504,8 @@ export function getProductionData(): DualTableData {
       id: `action-prod-${site.id}`,
       label: site.name,
       values: {
-        flavors: agg.flavors,
-        planned_sticks: agg.planned,
+        formulations: agg.formulations,
+        planned_units: agg.planned,
         capacity_pct: Math.round(capacityPct * 100) / 100,
         min_volume: minVolume,
         priority,
@@ -519,8 +519,8 @@ export function getProductionData(): DualTableData {
 
   // Sort detail rows
   const sorted: PlanRow[] = []
-  for (const flavor of FLAVORS) {
-    const parent = detailRows.find((r) => r.id === `prod-${flavor.id}`)!
+  for (const formulation of FORMULATIONS) {
+    const parent = detailRows.find((r) => r.id === `prod-${formulation.id}`)!
     sorted.push(parent)
     sorted.push(...detailRows.filter((r) => r.parentId === parent.id))
   }
@@ -540,27 +540,27 @@ export function getProductionData(): DualTableData {
 // ============================================================================
 // 4. KITTING MODULE
 // Action: Kitting decisions by pack configuration (point-in-time)
-// Detail: Flavor × Site for each pack config
+// Detail: Formulation × Site for each pack config
 // ============================================================================
 
 export function getKittingData(): DualTableData {
-  const flavorSticks = getFlavorMonthlySticks()
+  const formulationUnits = getFormulationMonthlyUnits()
   const kittingSites = COMAN_SITES.filter((s) => s.capabilities.includes("kitting"))
 
   const actionColumns: PlanColumn[] = [
     { key: "label", label: "Pack Configuration", type: "label", sticky: true, width: 260 },
-    { key: "flavors", label: "Flavors", type: "number" },
-    { key: "wip_in", label: "WIP In (sticks)", type: "number" },
-    { key: "fg_out", label: "FG Out (units)", type: "number" },
+    { key: "formulations", label: "Formulations", type: "number" },
+    { key: "wip_in", label: "WIP In (units)", type: "number" },
+    { key: "fg_out", label: "FG Out (packs)", type: "number" },
     { key: "yield_pct", label: "Yield %", type: "pct" },
     { key: "status", label: "Status", type: "badge" },
   ]
 
   const detailColumns: PlanColumn[] = [
-    { key: "label", label: "Flavor / Site", type: "label", sticky: true, width: 240 },
-    { key: "wip_sticks", label: "WIP Sticks", type: "number" },
-    { key: "kit_qty", label: "Kit Qty (sticks)", type: "number" },
-    { key: "fg_output", label: "FG Output (units)", type: "number" },
+    { key: "label", label: "Formulation / Site", type: "label", sticky: true, width: 240 },
+    { key: "wip_units", label: "WIP Units", type: "number" },
+    { key: "kit_qty", label: "Kit Qty (units)", type: "number" },
+    { key: "fg_output", label: "FG Output (packs)", type: "number" },
     { key: "channel_demand", label: "Channel Demand", type: "number" },
     { key: "end_fg", label: "End FG", type: "number" },
     { key: "wos", label: "WOS", type: "wos" },
@@ -579,36 +579,36 @@ export function getKittingData(): DualTableData {
     let totalFgOut = 0
     const childIds: string[] = []
 
-    for (let fi = 0; fi < FLAVORS.length; fi++) {
-      const flavor = FLAVORS[fi]
-      const parentId = `kit-${pack.id}-${flavor.id}`
+    for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+      const formulation = FORMULATIONS[fi]
+      const parentId = `kit-${pack.id}-${formulation.id}`
       const parentValues: Record<string, number | string | null> = {
-        wip_sticks: 0, kit_qty: 0, fg_output: 0, channel_demand: 0, end_fg: 0, wos: 0, attribution: null,
+        wip_units: 0, kit_qty: 0, fg_output: 0, channel_demand: 0, end_fg: 0, wos: 0, attribution: null,
       }
 
-      const monthlyStickDemand = Math.round(flavorSticks[fi][0] * pack.demandShare)
-      const weeklyStickDemand = Math.round(monthlyStickDemand / 4)
-      const weeklyUnitDemand = Math.round(weeklyStickDemand / pack.sticksPerUnit)
+      const monthlyUnitDemand = Math.round(formulationUnits[fi][0] * pack.demandShare)
+      const weeklyUnitDemand = Math.round(monthlyUnitDemand / 4)
+      const weeklyPackDemand = Math.round(weeklyUnitDemand / pack.unitsPerPack)
 
       for (const site of kittingSites) {
         const share = kittingShares[site.id] ?? 0.25
-        const childId = `kit-${pack.id}-${flavor.id}-${site.id}`
+        const childId = `kit-${pack.id}-${formulation.id}-${site.id}`
         childIds.push(childId)
 
         const rng = seededRand(
           pack.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 41 +
-            flavor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 43 +
+            formulation.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 43 +
             site.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 47,
         )
 
-        const siteWeeklyStickDemand = Math.round(weeklyStickDemand * share)
         const siteWeeklyUnitDemand = Math.round(weeklyUnitDemand * share)
+        const siteWeeklyPackDemand = Math.round(weeklyPackDemand * share)
 
-        const wipSticks = Math.round(siteWeeklyStickDemand * 3 * (0.9 + rng() * 0.2))
-        const kitQty = Math.round(siteWeeklyStickDemand * (0.95 + rng() * 0.1))
-        const fgOutput = Math.round(kitQty / pack.sticksPerUnit)
-        const channelDemand = Math.round(siteWeeklyUnitDemand * (0.9 + rng() * 0.2))
-        const carryFg = Math.round(siteWeeklyUnitDemand * TARGET_WOS_FG * (0.8 + rng() * 0.4))
+        const wipUnits = Math.round(siteWeeklyUnitDemand * 3 * (0.9 + rng() * 0.2))
+        const kitQty = Math.round(siteWeeklyUnitDemand * (0.95 + rng() * 0.1))
+        const fgOutput = Math.round(kitQty / pack.unitsPerPack)
+        const channelDemand = Math.round(siteWeeklyPackDemand * (0.9 + rng() * 0.2))
+        const carryFg = Math.round(siteWeeklyPackDemand * TARGET_WOS_FG * (0.8 + rng() * 0.4))
         const endFg = carryFg + fgOutput - channelDemand
         const wos = channelDemand > 0 ? Math.round((endFg / channelDemand) * 10) / 10 : 0
 
@@ -617,11 +617,11 @@ export function getKittingData(): DualTableData {
           label: site.name,
           type: "child",
           parentId,
-          values: { wip_sticks: wipSticks, kit_qty: kitQty, fg_output: fgOutput, channel_demand: channelDemand, end_fg: endFg, wos, attribution: "upstream" },
+          values: { wip_units: wipUnits, kit_qty: kitQty, fg_output: fgOutput, channel_demand: channelDemand, end_fg: endFg, wos, attribution: "upstream" },
           attribution: "upstream",
         })
 
-        parentValues.wip_sticks = (parentValues.wip_sticks as number) + wipSticks
+        parentValues.wip_units = (parentValues.wip_units as number) + wipUnits
         parentValues.kit_qty = (parentValues.kit_qty as number) + kitQty
         parentValues.fg_output = (parentValues.fg_output as number) + fgOutput
         parentValues.channel_demand = (parentValues.channel_demand as number) + channelDemand
@@ -637,7 +637,7 @@ export function getKittingData(): DualTableData {
 
       detailRows.push({
         id: parentId,
-        label: flavor.name,
+        label: formulation.name,
         type: "parent",
         values: parentValues,
       })
@@ -647,14 +647,14 @@ export function getKittingData(): DualTableData {
 
     // Action row per pack config
     const rng = seededRand(pack.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 53)
-    const theoreticalFg = totalWipIn > 0 ? totalWipIn / pack.sticksPerUnit : 0
+    const theoreticalFg = totalWipIn > 0 ? totalWipIn / pack.unitsPerPack : 0
     const yieldPct = theoreticalFg > 0 ? Math.min(1, totalFgOut / theoreticalFg) : 1
 
     actionRows.push({
       id: `action-kit-${pack.id}`,
       label: pack.name,
       values: {
-        flavors: FLAVORS.length,
+        formulations: FORMULATIONS.length,
         wip_in: totalWipIn,
         fg_out: totalFgOut,
         yield_pct: Math.round(yieldPct * 1000) / 1000,
@@ -665,11 +665,11 @@ export function getKittingData(): DualTableData {
     })
   }
 
-  // Sort: group by pack config, then flavor parent + site children
+  // Sort: group by pack config, then formulation parent + site children
   const sorted: PlanRow[] = []
   for (const pack of PACK_CONFIGS) {
-    for (const flavor of FLAVORS) {
-      const parentId = `kit-${pack.id}-${flavor.id}`
+    for (const formulation of FORMULATIONS) {
+      const parentId = `kit-${pack.id}-${formulation.id}`
       const parent = detailRows.find((r) => r.id === parentId)
       if (parent) {
         sorted.push(parent)
@@ -697,8 +697,8 @@ export function getKittingData(): DualTableData {
 // ============================================================================
 
 export function getMRPData(): DualTableData {
-  const totalSticks = getTotalMonthlySticks()
-  const tollingSites = COMAN_SITES.filter((s) => s.monthlyCapacity > 0)
+  const totalUnits = getTotalMonthlyUnits()
+  const fillingSites = COMAN_SITES.filter((s) => s.monthlyCapacity > 0)
 
   const actionColumns: PlanColumn[] = [
     { key: "label", label: "Material", type: "label", sticky: true, width: 220 },
@@ -734,7 +734,7 @@ export function getMRPData(): DualTableData {
     let totalOnHand = 0, totalOnOrder = 0, totalGross = 0, totalNet = 0, totalPO = 0
     const childIds: string[] = []
 
-    for (const site of tollingSites) {
+    for (const site of fillingSites) {
       const childId = `mrp-${bom.materialId}-${site.id}`
       childIds.push(childId)
       const rng = seededRand(
@@ -742,7 +742,7 @@ export function getMRPData(): DualTableData {
           site.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 59,
       )
 
-      const grossReq = Math.round(totalSticks[0] * site.productionShare * bom.qtyPerStick)
+      const grossReq = Math.round(totalUnits[0] * site.productionShare * bom.qtyPerUnit)
       const onHand = Math.round(grossReq * (1.5 + rng() * 1.0))
       const onOrder = Math.round(grossReq * (0.3 + rng() * 0.4))
       const netReq = Math.max(0, grossReq - onHand - onOrder)
@@ -818,12 +818,12 @@ export function getMRPData(): DualTableData {
 // ============================================================================
 // 6. ALLOCATION MODULE
 // Action: Allocation decisions by warehouse (point-in-time)
-// Detail: Flavor × Warehouse
+// Detail: Formulation × Warehouse
 // ============================================================================
 
 export function getAllocationData(): DualTableData {
-  const flavorSticks = getFlavorMonthlySticks()
-  const boxPack = PACK_CONFIGS.find((p) => p.id === "30-count")!
+  const formulationUnits = getFormulationMonthlyUnits()
+  const standardPack = PACK_CONFIGS.find((p) => p.id === "standard")!
 
   const actionColumns: PlanColumn[] = [
     { key: "label", label: "Warehouse", type: "label", sticky: true, width: 240 },
@@ -836,7 +836,7 @@ export function getAllocationData(): DualTableData {
   ]
 
   const detailColumns: PlanColumn[] = [
-    { key: "label", label: "Flavor / Warehouse", type: "label", sticky: true, width: 240 },
+    { key: "label", label: "Formulation / Warehouse", type: "label", sticky: true, width: 240 },
     { key: "start_fg", label: "Start FG", type: "number" },
     { key: "inbound", label: "Inbound", type: "number" },
     { key: "outbound", label: "Outbound", type: "number" },
@@ -853,20 +853,20 @@ export function getAllocationData(): DualTableData {
     warehouseAgg[wh.id] = { inbound: 0, outbound: 0, ending: 0, childIds: [] }
   }
 
-  for (let fi = 0; fi < FLAVORS.length; fi++) {
-    const flavor = FLAVORS[fi]
-    const parentId = `alloc-${flavor.id}`
+  for (let fi = 0; fi < FORMULATIONS.length; fi++) {
+    const formulation = FORMULATIONS[fi]
+    const parentId = `alloc-${formulation.id}`
     const parentValues: Record<string, number | string | null> = {
       start_fg: 0, inbound: 0, outbound: 0, end_fg: 0, wos: 0, attribution: null,
     }
 
-    const monthlyStickDemand = Math.round(flavorSticks[fi][0] * boxPack.demandShare)
-    const weeklyUnits = Math.round(monthlyStickDemand / boxPack.sticksPerUnit / 4)
+    const monthlyUnitDemand = Math.round(formulationUnits[fi][0] * standardPack.demandShare)
+    const weeklyUnits = Math.round(monthlyUnitDemand / standardPack.unitsPerPack / 4)
 
     for (const wh of WAREHOUSES) {
-      const childId = `alloc-${flavor.id}-${wh.id}`
+      const childId = `alloc-${formulation.id}-${wh.id}`
       const rng = seededRand(
-        flavor.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 61 +
+        formulation.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 61 +
           wh.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0) * 67,
       )
 
@@ -902,7 +902,7 @@ export function getAllocationData(): DualTableData {
 
     detailRows.push({
       id: parentId,
-      label: `${flavor.name} - 30ct`,
+      label: `${formulation.name} - Standard`,
       type: "parent",
       values: parentValues,
     })
@@ -935,8 +935,8 @@ export function getAllocationData(): DualTableData {
   }
 
   const sorted: PlanRow[] = []
-  for (const flavor of FLAVORS) {
-    const parent = detailRows.find((r) => r.id === `alloc-${flavor.id}`)!
+  for (const formulation of FORMULATIONS) {
+    const parent = detailRows.find((r) => r.id === `alloc-${formulation.id}`)!
     sorted.push(parent)
     sorted.push(...detailRows.filter((r) => r.parentId === parent.id))
   }

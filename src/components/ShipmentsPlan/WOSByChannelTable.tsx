@@ -3,7 +3,7 @@ import { css } from "@emotion/react"
 import { useMemo } from "react"
 import { Eye } from "lucide-react"
 import { theme } from "../../styles/theme/theme"
-import type { ShipmentsPeriod, ChannelWOSRow, ChannelStatus } from "../../data/lmnt-shipments-data"
+import type { ShipmentsPeriod, ChannelWOSRow, ChannelStatus } from "../../data/glowco-shipments-data"
 
 interface Props {
   periods: ShipmentsPeriod[]

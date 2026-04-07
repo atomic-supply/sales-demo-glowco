@@ -3,8 +3,8 @@ import { css } from "@emotion/react"
 import { useState, useCallback, useMemo, Fragment } from "react"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { theme } from "../../styles/theme/theme"
-import type { ConsumptionDataSet, ConsumptionSkuData, ConsumptionMeasure } from "../../data/lmnt-consumption-data"
-import { RETAIL_MEASURES, ONLINE_MEASURES } from "../../data/lmnt-consumption-data"
+import type { ConsumptionDataSet, ConsumptionSkuData, ConsumptionMeasure } from "../../data/glowco-consumption-data"
+import { RETAIL_MEASURES, ONLINE_MEASURES } from "../../data/glowco-consumption-data"
 
 /* ------------------------------------------------------------------ */
 /*  Props                                                               */

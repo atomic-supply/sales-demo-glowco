@@ -2,7 +2,7 @@
 import { css } from "@emotion/react"
 import { useMemo } from "react"
 import { theme } from "../styles/theme/theme"
-import { getConsumptionPivotData } from "../data/lmnt-consumption-data"
+import { getConsumptionPivotData } from "../data/glowco-consumption-data"
 
 const pageStyles = css`
   display: flex;

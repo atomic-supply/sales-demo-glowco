@@ -4,7 +4,7 @@ import { type FC } from "react"
 import { useNavigate } from "react-router"
 import { ArrowRight, Check, Clock, Circle } from "lucide-react"
 import { MODULES, type ModuleId } from "../data/app-config"
-import { getAlertCounts } from "../data/lmnt-inbox-data"
+import { getAlertCounts } from "../data/glowco-inbox-data"
 import { theme } from "../styles/theme/theme"
 
 interface ModuleStatus {
@@ -151,7 +151,7 @@ export const PlanStatusView: FC = () => {
     <div css={s.container}>
       <div css={s.title}>Plan Status</div>
       <div css={s.subtitle}>
-        LMNT Planning Pipeline &mdash; Run #247 &middot; April 4, 2026
+        GlowCo Planning Pipeline &mdash; Run #247 &middot; April 4, 2026
       </div>
 
       <div css={s.pipeline}>

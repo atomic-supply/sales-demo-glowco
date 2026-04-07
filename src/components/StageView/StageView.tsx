@@ -61,7 +61,7 @@ const MODULE_META: Record<
 const DEFAULT_SEGMENTS: Record<ModuleId, string> = {
   consumption: "channel",
   shipments: "sku",
-  production: "flavor",
+  production: "formulation",
   kitting: "packConfig",
   mrp: "material",
   allocation: "sku",

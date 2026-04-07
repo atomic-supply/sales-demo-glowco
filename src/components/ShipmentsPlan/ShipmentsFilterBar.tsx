@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { theme } from "../../styles/theme/theme"
-import { CHANNELS, WAREHOUSES } from "../../data/lmnt-master-data"
-import { PLANNERS } from "../../data/lmnt-shipments-data"
-import type { ChannelStatus } from "../../data/lmnt-shipments-data"
+import { CHANNELS, WAREHOUSES } from "../../data/glowco-master-data"
+import { PLANNERS } from "../../data/glowco-shipments-data"
+import type { ChannelStatus } from "../../data/glowco-shipments-data"
 import { Download } from "lucide-react"
 
 interface Props {

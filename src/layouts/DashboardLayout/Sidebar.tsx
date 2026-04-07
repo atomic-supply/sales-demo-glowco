@@ -18,6 +18,7 @@ import {
 import { useNavigate, useLocation } from "react-router"
 import { theme } from "../../styles/theme/theme"
 import { borders } from "../../styles"
+import { useNucleus } from "../../contexts/NucleusContext"
 
 const NUCLEUS_COLOR = theme.colors.nucleus
 const BRAND_COLOR = theme.colors.blue600
@@ -54,7 +55,7 @@ const sidebarItems: SidebarItem[] = [
   { type: "link", href: "/plan/mrp", name: "MRP", icon: Layers as Icon },
   { type: "link", href: "/plan/allocation", name: "Allocation", icon: GitBranch as Icon },
   { type: "header", name: "AI Assistant" },
-  { type: "link", href: "/nucleus", name: "Nucleus", icon: Atom as Icon, isNucleus: true },
+  { type: "link", href: "#nucleus", name: "Nucleus", icon: Atom as Icon, isNucleus: true },
 ]
 
 const { colors } = theme
@@ -160,11 +161,21 @@ export const Sidebar: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const pathname = location.pathname
+  const { isOpen: nucleusOpen, toggle: toggleNucleus } = useNucleus()
 
-  const isActive = (href: string) => {
+  const isActive = (href: string, isNucleus?: boolean) => {
+    if (isNucleus) return nucleusOpen
     if (href.startsWith("/consumption")) return pathname.startsWith("/consumption") && pathname.startsWith(href)
     if (href.startsWith("/plan/")) return pathname === href
     return pathname === href
+  }
+
+  const handleClick = (item: NavLink) => {
+    if (item.isNucleus) {
+      toggleNucleus()
+    } else {
+      navigate(item.href)
+    }
   }
 
   return (
@@ -183,12 +194,12 @@ export const Sidebar: FC = () => {
             )
           }
 
-          const active = isActive(item.href)
+          const active = isActive(item.href, item.isNucleus)
           const Icon = item.icon
           return (
             <button
-              key={item.href}
-              onClick={() => navigate(item.href)}
+              key={item.isNucleus ? "nucleus-toggle" : item.href}
+              onClick={() => handleClick(item)}
               css={s.navBtn(active, item.isNucleus)}
             >
               <Icon size={16} />
@@ -201,7 +212,7 @@ export const Sidebar: FC = () => {
       <div css={s.bottomSection}>
         <button css={s.profileBtn} title="Profile">
           <User size={16} />
-          <span>Dan O'Keefe</span>
+          <span>Sarah Mitchell</span>
         </button>
       </div>
     </aside>

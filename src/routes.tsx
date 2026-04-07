@@ -5,7 +5,6 @@ import { DataHubView } from "./containers/DataHubView"
 import { PlanStatusView } from "./containers/PlanStatusView"
 import { StageViewPage } from "./containers/StageViewPage"
 import { ShipmentsPlanPage } from "./containers/ShipmentsPlanPage"
-import { NucleusChatView } from "./containers/NucleusChatView"
 import { ConsumptionPlanPage } from "./containers/ConsumptionPlanPage"
 import { ConsumptionPivotPage } from "./containers/ConsumptionPivotPage"
 import { ConsumptionValidationPage } from "./containers/ConsumptionValidationPage"
@@ -27,7 +26,6 @@ const router = createBrowserRouter([
           { path: "plan", element: <Navigate to="/plan/shipments" replace /> },
           { path: "plan/shipments", element: <ShipmentsPlanPage /> },
           { path: "plan/:moduleId", element: <StageViewPage /> },
-          { path: "nucleus", element: <NucleusChatView /> },
         ],
       },
     ],

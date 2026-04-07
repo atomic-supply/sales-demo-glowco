@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react"
 import { type FC, useState } from "react"
-import { Check, ChevronDown, Clock } from "lucide-react"
+import { Check, ChevronDown, Clock, Atom } from "lucide-react"
 import { borders } from "../../styles"
-import { theme } from "../../styles/theme/theme"
+import { theme, alpha } from "../../styles/theme/theme"
+import { useNucleus } from "../../contexts/NucleusContext"
 
 interface PlanRun {
   id: string
@@ -115,21 +116,47 @@ const s = {
     font-weight: ${theme.typography.fontWeight.medium};
     color: ${theme.colors.gray500};
   `,
+  nucleusBtn: (active: boolean) => css`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: ${theme.borderRadius.md};
+    border: 1px solid ${active ? theme.colors.nucleus : theme.colors.gray200};
+    background: ${active ? alpha(theme.colors.nucleus, 0.08) : theme.colors.background};
+    cursor: pointer;
+    color: ${active ? theme.colors.nucleus : theme.colors.gray500};
+    transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+    &:hover {
+      border-color: ${theme.colors.nucleus};
+      color: ${theme.colors.nucleus};
+      background: ${alpha(theme.colors.nucleus, 0.05)};
+    }
+  `,
 }
 
 export const RunHeader: FC = () => {
   const [activeRun, setActiveRun] = useState(MOCK_RUNS[0])
   const [open, setOpen] = useState(false)
+  const { isOpen: nucleusOpen, toggle: toggleNucleus } = useNucleus()
 
   return (
     <header css={s.header}>
       <div css={s.left}>
-        <span css={s.orgLabel}>LMNT</span>
+        <span css={s.orgLabel}>GlowCo</span>
         <span css={s.separator}>/</span>
         <span css={s.updatedAt}>{activeRun.label} &mdash; {activeRun.timestamp}</span>
       </div>
 
       <div css={s.right}>
+        <button
+          css={s.nucleusBtn(nucleusOpen)}
+          onClick={toggleNucleus}
+          title={nucleusOpen ? "Close Nucleus" : "Open Nucleus"}
+        >
+          <Atom size={14} />
+        </button>
         <div css={s.runSelector}>
           <button css={s.runBtn} onClick={() => setOpen(!open)}>
             <span css={s.statusDot("#22C55E")} />

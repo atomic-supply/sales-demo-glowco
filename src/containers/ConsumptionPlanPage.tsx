@@ -4,7 +4,7 @@ import { useState, useMemo } from "react"
 import { theme } from "../styles/theme/theme"
 import { ConsumptionTable } from "../components/ConsumptionPlan/ConsumptionTable"
 import { ConsumptionFilterBar } from "../components/ConsumptionPlan/ConsumptionFilterBar"
-import { getConsumptionPlanData } from "../data/lmnt-consumption-data"
+import { getConsumptionPlanData } from "../data/glowco-consumption-data"
 
 const pageStyles = css`
   display: flex;

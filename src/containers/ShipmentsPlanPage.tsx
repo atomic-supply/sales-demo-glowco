@@ -5,7 +5,7 @@ import { theme } from "../styles/theme/theme"
 import { ShipmentsFilterBar } from "../components/ShipmentsPlan/ShipmentsFilterBar"
 import { WOSByChannelTable } from "../components/ShipmentsPlan/WOSByChannelTable"
 import { SupplyWalkBySKUTable } from "../components/ShipmentsPlan/SupplyWalkBySKUTable"
-import { getShipmentsPlanData } from "../data/lmnt-shipments-data"
+import { getShipmentsPlanData } from "../data/glowco-shipments-data"
 
 const pageStyles = css`
   display: flex;
